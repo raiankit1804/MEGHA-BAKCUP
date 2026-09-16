@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect, ChangeEvent, KeyboardEvent } from 'react';
-import { getTranslation } from '../i18n/translations';
+import { getTranslation, getModernLandingStrings } from '../i18n/translations';
 import styles from './ChatInput.module.css';
 import { DomainMode, DomainModeId } from '../types/chat';
 import { useTheme } from '../theme/ThemeProvider';
@@ -245,6 +245,8 @@ export default function ChatInput({
 
   // ─── STRICT MODERN HERO CARD: Matches user's futuristic screenshot ────────
   if (isModernHero) {
+    const modernT = getModernLandingStrings(language);
+
     return (
       <div className={`${styles.wrapper} ${styles.wrapperHero}`}>
         <div className={`${styles.modernHeroCard} ${modeGlow ? styles.containerGlow : ''}`}>
@@ -259,11 +261,11 @@ export default function ChatInput({
             value={query}
             onChange={handleInput}
             onKeyDown={handleKey}
-            placeholder="Ask me anything......"
+            placeholder={modernT.inputPlaceholder}
             className={styles.modernHeroTextarea}
             rows={2}
             disabled={loading}
-            aria-label="Ask me anything"
+            aria-label={modernT.inputPlaceholder}
             id="chat-input"
           />
 
@@ -275,11 +277,11 @@ export default function ChatInput({
                 type="button"
                 className={styles.modernAttachBtn}
                 onClick={onOpenSatellite || (() => textareaRef.current?.focus())}
-                title="Attach file, satellite imagery or meteorological data"
-                aria-label="Attach file"
+                title={modernT.attachFile}
+                aria-label={modernT.attachFile}
               >
                 <PaperclipIcon />
-                <span>Attach file</span>
+                <span>{modernT.attachFile}</span>
               </button>
 
               {/* Mode Picker Pill */}

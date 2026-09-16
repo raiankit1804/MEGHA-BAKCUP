@@ -11,7 +11,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { marked } from 'marked';
 import WeatherCard from './WeatherCard';
-import { getTranslation } from '../i18n/translations';
+import { getTranslation, getModernLandingStrings } from '../i18n/translations';
 import styles from './ChatWindow.module.css';
 import { ChatMessage, DomainModeId, SessionLocation, UserProfile } from '../types/chat';
 import { useTheme } from '../theme/ThemeProvider';
@@ -423,6 +423,8 @@ function EmptyState({ onSend, location, domainFilter, language, heroInput, onNew
 
   // ─── STRICT MODERN MODE: Futuristic Interactive UI matching screenshot ───
   if (interfaceStyle === 'modern') {
+    const modernT = getModernLandingStrings(language);
+
     return (
       <div className={styles.futuristicContainer}>
         {/* 1. Interactive Green 3D Fluid Object (Floating Orb) */}
@@ -430,7 +432,7 @@ function EmptyState({ onSend, location, domainFilter, language, heroInput, onNew
 
         {/* 2. Futuristic Greeting */}
         <div className={styles.futuristicGreeting}>
-          <div className={styles.greetingHelp}>What can I help with?</div>
+          <div className={styles.greetingHelp}>{modernT.greeting}</div>
         </div>
 
         {/* 3. Three Recommendation Cards with colored pill badges */}
@@ -438,31 +440,31 @@ function EmptyState({ onSend, location, domainFilter, language, heroInput, onNew
           <button
             type="button"
             className={styles.futuristicCard}
-            onClick={() => onSend?.(locName ? `AgriSense farm weather and crop health advisory for ${locName}` : "What are the crop sowing and irrigation advisories?")}
-            title="Help with crop health & sowing advisory"
+            onClick={() => onSend?.(locName ? `${modernT.card1Query} (${locName})` : modernT.card1Query)}
+            title={modernT.card1Subtitle}
           >
-            <span className={styles.cardBadgeCyan}>Content Help</span>
-            <span className={styles.futuristicCardSubtitle}>Help with crop health & sowing advisory</span>
+            <span className={styles.cardBadgeCyan}>{modernT.card1Badge}</span>
+            <span className={styles.futuristicCardSubtitle}>{modernT.card1Subtitle}</span>
           </button>
 
           <button
             type="button"
             className={styles.futuristicCard}
-            onClick={() => onSend?.(locName ? `Live Doppler radar, storm probability and IMD warnings for ${locName}` : "Show live IMD warnings and rain radar")}
-            title="Track storm probability & radar ideas"
+            onClick={() => onSend?.(locName ? `${modernT.card2Query} (${locName})` : modernT.card2Query)}
+            title={modernT.card2Subtitle}
           >
-            <span className={styles.cardBadgeSalmon}>Suggestions</span>
-            <span className={styles.futuristicCardSubtitle}>Track storm probability & radar ideas</span>
+            <span className={styles.cardBadgeSalmon}>{modernT.card2Badge}</span>
+            <span className={styles.futuristicCardSubtitle}>{modernT.card2Subtitle}</span>
           </button>
 
           <button
             type="button"
             className={styles.futuristicCard}
-            onClick={() => onSend?.(locName ? `Waterlogged roads and inundated underpasses near ${locName}` : "What roads and underpasses are waterlogged?")}
-            title="Help avoid flooded underpasses & commute delays"
+            onClick={() => onSend?.(locName ? `${modernT.card3Query} (${locName})` : modernT.card3Query)}
+            title={modernT.card3Subtitle}
           >
-            <span className={styles.cardBadgeMint}>Job Application</span>
-            <span className={styles.futuristicCardSubtitle}>Help avoid flooded underpasses & commute delay</span>
+            <span className={styles.cardBadgeMint}>{modernT.card3Badge}</span>
+            <span className={styles.futuristicCardSubtitle}>{modernT.card3Subtitle}</span>
           </button>
         </div>
 

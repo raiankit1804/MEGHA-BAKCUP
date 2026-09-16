@@ -118,7 +118,7 @@ export default function TopBar({
         >
           <span style={{ fontSize: '1rem', color: '#eab308' }}>⚠️</span>
           <span style={{ fontSize: '0.8rem', fontWeight: 600, color: hasWarnings ? '#f59e0b' : 'var(--text-secondary)' }}>
-            Alerts
+            {getTranslation(language, 'disasterAlert', 'Alerts')}
           </span>
           {hasWarnings && (
             <span
@@ -144,7 +144,7 @@ export default function TopBar({
         >
           <span style={{ fontSize: '0.95rem' }}>🛰️</span>
           <span style={{ fontSize: '0.8rem', fontWeight: 500, color: 'var(--text-secondary)' }}>
-            Satellite
+            {getTranslation(language, 'satelliteBtn', 'Satellite')}
           </span>
         </button>
 
