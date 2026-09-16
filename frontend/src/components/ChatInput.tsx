@@ -68,7 +68,7 @@ export default function ChatInput({
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
 
   const activeMode = DOMAIN_MODES.find((m) => m.id === domainFilter) || DOMAIN_MODES[0];
-  const activeModeName = activeMode.label || getTranslation(language, activeMode.nameKey, activeMode.id);
+  const activeModeName = language === 'en' ? activeMode.label : (getTranslation(language, activeMode.nameKey) || activeMode.label);
   const placeholder = getTranslation(language, 'inputPlaceholder', 'Ask WeatherGPT…');
 
   // Close mode menu on outside click
@@ -304,7 +304,7 @@ export default function ChatInput({
                     <div className={styles.dropdownHeader}>Select Domain Mode</div>
                     {DOMAIN_MODES.map((mode) => {
                       const isSelected = domainFilter === mode.id;
-                      const localizedName = mode.label || getTranslation(language, mode.nameKey, mode.id);
+                      const localizedName = language === 'en' ? mode.label : (getTranslation(language, mode.nameKey) || mode.label);
 
                       return (
                         <button
