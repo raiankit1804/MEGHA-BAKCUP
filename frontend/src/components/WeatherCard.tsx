@@ -419,7 +419,7 @@ export default function WeatherCard({
         <div
           className={styles.radarImageContainer}
           onClick={() => onOpenSatellite?.('radar')}
-          title="Click to expand live Doppler Radar Mosaic"
+          title="Click to open live IMD Doppler Radar & INSAT-3DS Viewer"
         >
           <Image
             src="/images/radar_preview.jpg"
@@ -433,19 +433,26 @@ export default function WeatherCard({
             <span className={styles.radarPulse}></span>
             <span>LIVE DOPPLER RADAR • IMD</span>
           </div>
+          <div className={styles.radarExpandHint}>
+            <span>Expand Live Viewer ↗</span>
+          </div>
         </div>
         <div className={styles.radarActions}>
           <button
+            type="button"
             className={styles.radarActionBtn}
             onClick={() => onOpenSatellite?.('radar')}
+            title="Open Doppler Radar Mosaic"
           >
-            📡 {getCardTranslation(language, 'weatherRadar', 'Weather radar')}
+            <span>📡</span> {getCardTranslation(language, 'weatherRadar', 'Weather radar')}
           </button>
           <button
+            type="button"
             className={styles.radarActionBtn}
             onClick={() => onOpenSatellite?.('satellite')}
+            title="Open INSAT-3DS Satellite Viewer"
           >
-            🛰️ {getCardTranslation(language, 'satelliteRadar', 'INSAT-3DS Satellite')}
+            <span>🛰️</span> INSAT-3DS Satellite
           </button>
         </div>
       </div>

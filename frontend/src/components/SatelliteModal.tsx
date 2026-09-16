@@ -132,86 +132,93 @@ export default function SatelliteModal({ onClose, activeMode = 'aviation' }: Sat
           <button className={styles.closeBtn} onClick={onClose} aria-label="Close viewer">✕</button>
         </div>
 
-        {/* Top 3 Primary Tabs matching IMD Mausam Screenshot */}
-        <div className={styles.topTabs}>
-          {TOP_TABS.map((tab) => (
-            <button
-              key={tab.id}
-              className={`${styles.topTabBtn} ${activeTab === tab.id ? styles.topTabActive : ''}`}
-              onClick={() => {
-                setActiveTab(tab.id);
-                setLoading(true);
-                setImgError(false);
-                setZoom(1);
-              }}
-            >
-              <div className={styles.tabHindi}>{tab.label}</div>
-              <div className={styles.tabEnglish}>{tab.icon} {tab.enLabel}</div>
-            </button>
-          ))}
-        </div>
+        {/* Streamlined Top Navigation Bar */}
+        <div className={styles.navBar}>
+          {/* Primary View Switcher */}
+          <div className={styles.topTabs}>
+            {TOP_TABS.map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                className={`${styles.topTabBtn} ${activeTab === tab.id ? styles.topTabActive : ''}`}
+                onClick={() => {
+                  setActiveTab(tab.id);
+                  setLoading(true);
+                  setImgError(false);
+                  setZoom(1);
+                }}
+              >
+                <span className={styles.tabIcon}>{tab.icon}</span>
+                <span className={styles.tabLabel}>{tab.enLabel}</span>
+                <span className={styles.tabHindiBadge}>{tab.label}</span>
+              </button>
+            ))}
+          </div>
 
-        {/* Sub-bar for Satellite Channels & Loop/Still Toggle */}
-        {activeTab === 'satellite' && (
-          <div className={styles.subBar}>
-            <div className={styles.channelButtons}>
-              {SATELLITE_CHANNELS.map((ch) => (
+          {/* Sub-controls: Channels & Loop/Still when in satellite view */}
+          {activeTab === 'satellite' && (
+            <div className={styles.satControlsGroup}>
+              <div className={styles.channelButtons}>
+                {SATELLITE_CHANNELS.map((ch) => (
+                  <button
+                    key={ch.id}
+                    type="button"
+                    className={`${styles.channelBtn} ${selectedSatChannel === ch.id ? styles.channelBtnActive : ''}`}
+                    onClick={() => {
+                      setSelectedSatChannel(ch.id);
+                      setLoading(true);
+                      setImgError(false);
+                    }}
+                  >
+                    {ch.label.split(' ')[0]}
+                  </button>
+                ))}
+              </div>
+
+              <div className={styles.modeToggleGroup}>
                 <button
-                  key={ch.id}
-                  className={`${styles.channelBtn} ${selectedSatChannel === ch.id ? styles.channelBtnActive : ''}`}
+                  type="button"
+                  className={`${styles.modeBtn} ${isLoopMode ? styles.modeBtnActive : ''}`}
                   onClick={() => {
-                    setSelectedSatChannel(ch.id);
+                    setIsLoopMode(true);
                     setLoading(true);
                     setImgError(false);
                   }}
+                  title="Continuous meteorological motion loop"
                 >
-                  {ch.label}
+                  ⚡ Loop (GIF)
                 </button>
-              ))}
-            </div>
-
-            {/* Loop vs Still Switcher */}
-            <div className={styles.modeToggleGroup}>
-              <button
-                className={`${styles.modeBtn} ${isLoopMode ? styles.modeBtnActive : ''}`}
-                onClick={() => {
-                  setIsLoopMode(true);
-                  setLoading(true);
-                  setImgError(false);
-                }}
-                title="Continuous meteorological motion loop"
-              >
-                <span className={styles.loopIcon}>⚡</span> Realtime Loop (GIF)
-              </button>
-              <button
-                className={`${styles.modeBtn} ${!isLoopMode ? styles.modeBtnActive : ''}`}
-                onClick={() => {
-                  setIsLoopMode(false);
-                  setLoading(true);
-                  setImgError(false);
-                }}
-                title="Single high-resolution radiometric frame"
-              >
-                <span className={styles.stillIcon}>📸</span> Latest Still (HD)
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Viewer Viewport */}
-        <div className={styles.viewport}>
-          <div className={styles.toolbar}>
-            <div className={styles.feedInfo}>
-              <div className={styles.metaBadge}>
-                <span className={isLoopMode && activeTab !== 'lightning' ? styles.statusLoop : styles.statusStill}>
-                  {activeTab === 'satellite' && isLoopMode ? '● REALTIME LOOP (GIF)' : '● ACTIVE FEED'}
-                </span>
-                <span className={styles.timeText}>{gmtIstTime}</span>
+                <button
+                  type="button"
+                  className={`${styles.modeBtn} ${!isLoopMode ? styles.modeBtnActive : ''}`}
+                  onClick={() => {
+                    setIsLoopMode(false);
+                    setLoading(true);
+                    setImgError(false);
+                  }}
+                  title="Single high-resolution radiometric frame"
+                >
+                  📸 Still (HD)
+                </button>
               </div>
+            </div>
+          )}
+        </div>
+
+        {/* Main Observation Viewport */}
+        <div className={styles.viewport}>
+          {/* Floating HUD status bar on top of image */}
+          <div className={styles.hudOverlay}>
+            <div className={styles.hudMeta}>
+              <span className={isLoopMode && activeTab !== 'lightning' ? styles.statusLoop : styles.statusStill}>
+                {activeTab === 'satellite' && isLoopMode ? '● REALTIME LOOP' : '● ACTIVE FEED'}
+              </span>
+              <span className={styles.hudTime}>{gmtIstTime}</span>
             </div>
 
             <div className={styles.zoomControls}>
               <button
+                type="button"
                 className={styles.toolBtn}
                 onClick={() => setZoom((z) => Math.max(0.7, z - 0.2))}
                 title="Zoom Out"
@@ -220,6 +227,7 @@ export default function SatelliteModal({ onClose, activeMode = 'aviation' }: Sat
               </button>
               <span className={styles.zoomVal}>{Math.round(zoom * 100)}%</span>
               <button
+                type="button"
                 className={styles.toolBtn}
                 onClick={() => setZoom((z) => Math.min(2.5, z + 0.2))}
                 title="Zoom In"
@@ -227,6 +235,7 @@ export default function SatelliteModal({ onClose, activeMode = 'aviation' }: Sat
                 +
               </button>
               <button
+                type="button"
                 className={styles.toolBtn}
                 onClick={() => setZoom(1)}
                 title="Reset Zoom"
@@ -234,6 +243,7 @@ export default function SatelliteModal({ onClose, activeMode = 'aviation' }: Sat
                 1:1
               </button>
               <button
+                type="button"
                 className={styles.toolBtn}
                 onClick={handleRefresh}
                 title="Reload Latest Imagery"
@@ -243,7 +253,7 @@ export default function SatelliteModal({ onClose, activeMode = 'aviation' }: Sat
             </div>
           </div>
 
-          {/* Main Observation Stage */}
+          {/* Main Image Stage */}
           <div className={styles.imageContainer}>
             {loading && !imgError && (
               <div className={styles.loaderOverlay}>
@@ -260,7 +270,7 @@ export default function SatelliteModal({ onClose, activeMode = 'aviation' }: Sat
                   key={`${currentImgUrl}-${timestamp}`}
                   src={`${currentImgUrl}&t=${Date.now()}`}
                   alt={currentTitle}
-                  className={styles.satImage}
+                  className={`${styles.satImage} ${activeTab === 'satellite' ? styles.satImageSatellite : styles.satImageRadar}`}
                   style={{
                     transform: `scale(${zoom})`,
                     opacity: loading ? 0.3 : 1,
@@ -303,25 +313,19 @@ export default function SatelliteModal({ onClose, activeMode = 'aviation' }: Sat
             )}
           </div>
 
-          {/* Metadata Footer */}
+          {/* Clean Metadata Footer */}
           <div className={styles.infoFooter}>
             <div className={styles.infoLeft}>
               <strong className={styles.feedTitle}>{currentTitle}</strong>
-              <p className={styles.channelDesc}>{currentDesc}</p>
+              <span className={styles.feedSub}>{currentDesc}</span>
             </div>
-            <div className={styles.subcontinentalInfo}>
-              <span>Subcontinent Grid: 8°N - 37°N, 68°E - 97°E</span>
-              <span>Resolution: 1 km • Orbit: 74°E Geostationary</span>
+            <div className={styles.footerActions}>
+              <div className={styles.subcontinentalInfo}>
+                <span>Subcontinent: 8°N-37°N, 68°E-97°E</span>
+              </div>
+              <button type="button" className={styles.doneBtn} onClick={onClose}>Done</button>
             </div>
           </div>
-        </div>
-
-        {/* Modal Bottom Controls */}
-        <div className={styles.modalFooter}>
-          <div className={styles.footerLegal}>
-            <span>Official feeds sourced from <strong>India Meteorological Department (IMD)</strong> & <strong>ISRO</strong>.</span>
-          </div>
-          <button className={styles.doneBtn} onClick={onClose}>Done</button>
         </div>
       </div>
     </>
