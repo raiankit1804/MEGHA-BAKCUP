@@ -427,13 +427,13 @@
   background: var(--bg-card) !important;
   border: 1px solid var(--border-card) !important;
   border-radius: 20px !important;
-  padding: 1.1rem 1.25rem 0.95rem 1.25rem !important;
+  padding: 0.85rem 1.15rem 0.75rem 1.15rem !important;
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), 0 0 24px rgba(16, 185, 129, 0.08) !important;
   backdrop-filter: blur(24px) !important;
   -webkit-backdrop-filter: blur(24px) !important;
   display: flex !important;
   flex-direction: column !important;
-  gap: 0.5rem !important;
+  gap: 0.4rem !important;
   width: 100% !important;
   box-sizing: border-box !important;
   transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
@@ -449,10 +449,10 @@
   align-items: center;
   gap: 0.35rem;
   color: #34d399;
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   line-height: 1;
   filter: drop-shadow(0 0 8px rgba(52, 211, 153, 0.5));
-  margin-bottom: 0.15rem;
+  margin-bottom: 0.1rem;
   user-select: none;
 }
 
@@ -464,11 +464,11 @@
   resize: none !important;
   color: var(--text-primary) !important;
   font-family: var(--font-body) !important;
-  font-size: 1.05rem !important;
-  line-height: 1.6 !important;
-  padding: 0.35rem 0 !important;
-  min-height: 52px !important;
-  max-height: 180px !important;
+  font-size: 1rem !important;
+  line-height: 1.55 !important;
+  padding: 0.25rem 0 !important;
+  min-height: 44px !important;
+  max-height: 150px !important;
 }
 
 .modernHeroTextarea::placeholder {

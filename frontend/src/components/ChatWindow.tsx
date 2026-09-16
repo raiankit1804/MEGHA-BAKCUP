@@ -52,9 +52,15 @@ export default function ChatWindow({
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, loading]);
 
+  const isLanding = messages.length === 0 && !loading;
+
   return (
-    <div className={styles.window} aria-live="polite" aria-label="Conversation">
-      {messages.length === 0 && !loading && (
+    <div
+      className={`${styles.window} ${isLanding ? styles.windowLanding : ''}`}
+      aria-live="polite"
+      aria-label="Conversation"
+    >
+      {isLanding && (
         <EmptyState
           onSend={onSend}
           location={location}
@@ -428,7 +434,7 @@ function EmptyState({ onSend, location, domainFilter, language, heroInput, onNew
     return (
       <div className={styles.futuristicContainer}>
         {/* 1. Interactive Green 3D Fluid Object (Floating Orb) */}
-        <FuturisticOrb isListening={isListening} />
+        <FuturisticOrb isListening={isListening} height="clamp(135px, 18vh, 190px)" />
 
         {/* 2. Futuristic Greeting */}
         <div className={styles.futuristicGreeting}>

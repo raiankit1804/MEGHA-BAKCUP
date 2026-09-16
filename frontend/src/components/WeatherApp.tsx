@@ -653,7 +653,12 @@ export default function WeatherApp() {
         )}
 
         {/* Chat Conversation & Centered Gemini Landing Screen */}
-        <div style={scrollArea}>
+        <div
+          style={{
+            ...scrollArea,
+            overflowY: messages.length === 0 ? 'hidden' : 'auto',
+          }}
+        >
           <ChatWindow
             messages={messages}
             language={session.language}
