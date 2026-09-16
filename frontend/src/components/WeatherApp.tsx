@@ -504,7 +504,6 @@ export default function WeatherApp() {
               style={mobileMenuBtn}
             >
               <span style={{ fontSize: '1.25rem', lineHeight: 1 }}>☰</span>
-              {activeWarnings.length > 0 && <span style={mobileWarningDot} />}
             </button>
             <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', flexShrink: 0 }} onClick={handleNewChat}>
               <img
@@ -709,56 +708,6 @@ export default function WeatherApp() {
             />
           </div>
         )}
-
-        {/* Floating Circular Live Weather & Disaster Warning Button (Directly above SOS) */}
-        <button
-          type="button"
-          onClick={() => setShowWarnings(true)}
-          style={{
-            ...floatingWarningBtn,
-            background: activeWarnings.length > 0
-              ? 'linear-gradient(135deg, #f59e0b, #d97706)'
-              : 'rgba(23, 28, 40, 0.92)',
-            border: activeWarnings.length > 0
-              ? '2px solid rgba(255, 255, 255, 0.4)'
-              : '1px solid rgba(255, 255, 255, 0.18)',
-            boxShadow: activeWarnings.length > 0
-              ? '0 4px 20px rgba(245, 158, 11, 0.5)'
-              : '0 4px 16px rgba(0, 0, 0, 0.35)',
-            color: activeWarnings.length > 0 ? '#fff' : '#f59e0b',
-          }}
-          title={activeWarnings.length > 0 ? `${activeWarnings.length} Active IMD Warning(s) - Click to view` : 'IMD Disaster & Weather Warnings'}
-          aria-label="Disaster & Weather Warnings"
-        >
-          <span style={{ fontSize: '1.25rem', lineHeight: 1 }}>⚠️</span>
-          <span style={{ fontWeight: 800, fontSize: '0.64rem', letterSpacing: '0.04em' }}>ALERT</span>
-          {activeWarnings.length > 0 && (
-            <>
-              <div style={warningPulseWave} />
-              <span
-                style={{
-                  position: 'absolute',
-                  top: -2,
-                  right: -2,
-                  background: '#ef4444',
-                  color: '#fff',
-                  borderRadius: '50%',
-                  width: 20,
-                  height: 20,
-                  fontSize: '0.72rem',
-                  fontWeight: 800,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  border: '2px solid #0f172a',
-                  boxShadow: '0 2px 6px rgba(0,0,0,0.4)',
-                }}
-              >
-                {activeWarnings.length}
-              </span>
-            </>
-          )}
-        </button>
 
         {/* Floating Circular Emergency SOS Button (Bottom Right) */}
         <button

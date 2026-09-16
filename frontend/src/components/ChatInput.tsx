@@ -272,18 +272,6 @@ export default function ChatInput({
           {/* Bottom Controls Row: Attach file, Mode pill, Mic on left; Upward arrow on right */}
           <div className={styles.modernHeroBottom}>
             <div className={styles.modernHeroLeft}>
-              {/* Attach File Button */}
-              <button
-                type="button"
-                className={styles.modernAttachBtn}
-                onClick={onOpenSatellite || (() => textareaRef.current?.focus())}
-                title={modernT.attachFile}
-                aria-label={modernT.attachFile}
-              >
-                <PaperclipIcon />
-                <span>{modernT.attachFile}</span>
-              </button>
-
               {/* Mode Picker Pill */}
               <div className={styles.modeWrapper} ref={modeMenuRef}>
                 <button
@@ -326,19 +314,6 @@ export default function ChatInput({
                   </div>
                 )}
               </div>
-
-              {/* Satellite shortcut in Aviation/Marine mode */}
-              {isAeroMarine && (
-                <button
-                  type="button"
-                  className={styles.satShortcutBtn}
-                  onClick={onOpenSatellite}
-                  title="Open Live IMD Satellite & Radar"
-                >
-                  <span>🛰️</span>
-                  <span>Satellite</span>
-                </button>
-              )}
 
               {/* Voice Microphone */}
               <button
@@ -423,19 +398,6 @@ export default function ChatInput({
                 <span className={styles.modeName}>{activeModeName}</span>
                 <span className={styles.modeChevron}>▾</span>
               </button>
-
-              {/* Satellite shortcut in Aviation/Marine mode */}
-              {isAeroMarine && (
-                <button
-                  type="button"
-                  className={styles.satShortcutBtn}
-                  onClick={onOpenSatellite}
-                  title="Open Live IMD Satellite & Radar"
-                >
-                  <span>🛰️</span>
-                  <span>Satellite</span>
-                </button>
-              )}
 
               {/* Mode Dropdown Menu */}
               {showModeMenu && (

@@ -97,36 +97,6 @@ export default function LeftRail({
             <span className={styles.btnLabel}>{getTranslation(language, 'history', 'Chat history')}</span>
           </button>
 
-          {/* IMD Satellite & Radar */}
-          <button
-            type="button"
-            className={styles.railBtn}
-            onClick={onOpenSatellite}
-            title="IMD Satellite & Doppler Radar"
-            aria-label="Satellite and Radar"
-          >
-            <span className={styles.btnIcon} style={{ fontSize: '1.15rem' }}>🛰️</span>
-            <span className={styles.btnLabel}>Satellite & Radar</span>
-          </button>
-
-          {/* Live Warnings */}
-          <button
-            type="button"
-            className={`${styles.railBtn} ${hasWarnings ? styles.railBtnWarning : ''}`}
-            onClick={onOpenWarnings}
-            title={getTranslation(language, 'disasterAlert', 'Disaster & Weather Warnings')}
-            aria-label="Disaster warnings"
-          >
-            <span className={styles.btnIcon} style={{ fontSize: '1.15rem' }}>
-              ⚠️
-              {hasWarnings && <span className={styles.warningDot} />}
-            </span>
-            <span className={styles.btnLabel}>
-              {getTranslation(language, 'disasterAlert', 'Live Warnings')}
-            </span>
-            {hasWarnings && <span className={styles.expandedBadge}>Alert</span>}
-          </button>
-
           {/* 22 Indian Languages */}
           <button
             type="button"
@@ -261,35 +231,6 @@ export default function LeftRail({
               >
                 <span className={styles.itemIcon}>💬</span>
                 <span className={styles.itemLabel}>{getTranslation(language, 'history', 'Chat history')}</span>
-              </button>
-
-              {/* IMD Satellite & Radar */}
-              <button
-                type="button"
-                className={styles.mobileMenuItem}
-                onClick={() => {
-                  onOpenSatellite?.();
-                  onCloseMobileDrawer?.();
-                }}
-              >
-                <span className={styles.itemIcon}>🛰️</span>
-                <span className={styles.itemLabel}>IMD Satellite & Doppler Radar</span>
-              </button>
-
-              {/* Live Warnings */}
-              <button
-                type="button"
-                className={styles.mobileMenuItem}
-                onClick={() => {
-                  onOpenWarnings?.();
-                  onCloseMobileDrawer?.();
-                }}
-              >
-                <span className={styles.itemIcon}>⚠️</span>
-                <span className={styles.itemLabel}>
-                  {getTranslation(language, 'disasterAlert', 'Disaster & Weather Warnings')}
-                </span>
-                {hasWarnings && <span className={styles.mobileBadge}>Alert</span>}
               </button>
 
               {/* 22 Languages */}
