@@ -14,9 +14,9 @@ interface FuturisticOrbProps {
 }
 
 export default function FuturisticOrb({
-  primaryColor = '#10b981',     // Vibrant emerald green
-  secondaryColor = '#06b6d4',   // Ethereal cyan / teal
-  accentColor = '#34d399',      // Bright mint highlight
+  primaryColor = '#2563eb',     // Atmospheric Royal Blue
+  secondaryColor = '#0ea5e9',   // Deep Azure / Sky Cyan
+  accentColor = '#38bdf8',      // Bright Cloud / Lightning Sky Blue
   isTyping = false,
   isListening = false,
   onClick,
@@ -128,7 +128,7 @@ export default function FuturisticOrb({
 
       ctx.clearRect(0, 0, width, height);
 
-      // ─── 1. Background Cyber Matrix Grid ───────────────────────────────
+      // ─── 1. Background Atmospheric Spatial Grid ──────────────────────────
       if (showGrid) {
         const gridSize = 24;
         const gridCols = Math.ceil(width / gridSize);

@@ -43,7 +43,7 @@
   }
 }
 
-/* Sleek Ambient Cyber Shockwave Glow */
+/* Sleek Ambient Atmospheric Weather Glow */
 .ambientShock {
   position: absolute;
   top: 50%;
@@ -53,9 +53,9 @@
   height: min(640px, 85vw);
   background: radial-gradient(
     circle,
-    rgba(16, 185, 129, 0.28) 0%,
-    rgba(6, 182, 212, 0.16) 35%,
-    rgba(5, 150, 105, 0.05) 60%,
+    rgba(14, 165, 233, 0.28) 0%,
+    rgba(37, 99, 235, 0.18) 35%,
+    rgba(99, 102, 241, 0.08) 60%,
     transparent 75%
   );
   filter: blur(50px);
@@ -82,22 +82,22 @@
   padding: 1.5rem;
 }
 
-/* HUD System Tag */
+/* Atmospheric Weather HUD Tag */
 .hudTag {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   padding: 0.35rem 0.95rem;
   border-radius: 9999px;
-  background: rgba(6, 78, 59, 0.6);
-  border: 1px solid rgba(52, 211, 153, 0.4);
-  color: #6ee7b7;
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  color: #38bdf8;
   font-size: 0.76rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   margin-bottom: 1rem;
-  box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 0 24px rgba(14, 165, 233, 0.35);
   backdrop-filter: blur(12px);
 }
 
@@ -105,8 +105,8 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #34d399;
-  box-shadow: 0 0 10px #34d399;
+  background: #38bdf8;
+  box-shadow: 0 0 10px #38bdf8;
   animation: hudDotBlink 0.7s infinite alternate;
 }
 
@@ -123,7 +123,7 @@
   letter-spacing: -0.02em;
   color: #ffffff;
   margin-bottom: 0.35rem;
-  text-shadow: 0 0 25px rgba(52, 211, 153, 0.45);
+  text-shadow: 0 0 30px rgba(56, 189, 248, 0.5);
 }
 
 .subtitle {
@@ -133,7 +133,7 @@
   margin-bottom: 1.5rem;
 }
 
-/* Futuristic Neon Progress Track */
+/* Atmospheric Weather Progress Track */
 .progressTrack {
   width: 240px;
   height: 4px;
@@ -147,9 +147,9 @@
 .progressFill {
   height: 100%;
   width: 0%;
-  background: linear-gradient(90deg, #06b6d4, #10b981, #34d399);
+  background: linear-gradient(90deg, #0284c7, #0ea5e9, #38bdf8);
   border-radius: 9999px;
-  box-shadow: 0 0 12px #34d399;
+  box-shadow: 0 0 14px #38bdf8;
   animation: loadProgress 1.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 

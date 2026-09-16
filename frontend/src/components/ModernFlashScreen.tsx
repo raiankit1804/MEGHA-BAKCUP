@@ -39,16 +39,23 @@ export default function ModernFlashScreen({ onDone }: ModernFlashScreenProps) {
       <div className={styles.content}>
         <div className={styles.hudTag}>
           <span className={styles.hudDot} />
-          SYSTEM PROTOCOL // CYBER INTELLIGENCE
+          ATMOSPHERIC INTELLIGENCE // METEOROLOGY AI
         </div>
 
-        {/* The interactive Futuristic Orb cleanly sized without overlap or wireframe */}
+        {/* The interactive Atmospheric Cloud Orb */}
         <div style={{ width: '220px', height: '170px', margin: '0 auto 1.5rem auto', position: 'relative' }}>
-          <FuturisticOrb isTyping={true} height={170} showGrid={false} />
+          <FuturisticOrb
+            isTyping={true}
+            height={170}
+            showGrid={false}
+            primaryColor="#2563eb"
+            secondaryColor="#0ea5e9"
+            accentColor="#38bdf8"
+          />
         </div>
 
         <h2 className={styles.title}>MEGHA-SETU</h2>
-        <p className={styles.subtitle}>MODERN MODE INITIALIZED // DARK PROTOCOL ACTIVE</p>
+        <p className={styles.subtitle}>INDIA'S WEATHER GPT • IMD & NWP FORECASTING ACTIVE</p>
 
         <div className={styles.progressTrack}>
           <div className={styles.progressFill} />
