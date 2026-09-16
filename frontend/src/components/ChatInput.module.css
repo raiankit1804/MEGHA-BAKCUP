@@ -417,3 +417,126 @@
     display: none !important;
   }
 }
+
+/* ════════════════════════════════════════════════════════════════════════════
+   FUTURISTIC HERO INPUT CARD (Matches screenshot layout with ✨ and ↑)
+   ════════════════════════════════════════════════════════════════════════════ */
+.modernHeroCard {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-card) !important;
+  border-radius: 20px !important;
+  padding: 1.1rem 1.25rem 0.95rem 1.25rem !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), 0 0 24px rgba(16, 185, 129, 0.08) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.5rem !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.modernHeroCard:focus-within {
+  border-color: rgba(52, 211, 153, 0.6) !important;
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.5), 0 0 28px rgba(16, 185, 129, 0.2) !important;
+}
+
+.modernHeroSparkle {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #34d399;
+  font-size: 1.15rem;
+  line-height: 1;
+  filter: drop-shadow(0 0 8px rgba(52, 211, 153, 0.5));
+  margin-bottom: 0.15rem;
+  user-select: none;
+}
+
+.modernHeroTextarea {
+  flex: 1;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  resize: none !important;
+  color: var(--text-primary) !important;
+  font-family: var(--font-body) !important;
+  font-size: 1.05rem !important;
+  line-height: 1.5 !important;
+  padding: 0.2rem 0 !important;
+  min-height: 48px !important;
+  max-height: 180px !important;
+}
+
+.modernHeroTextarea::placeholder {
+  color: var(--text-muted) !important;
+  font-size: 1.02rem !important;
+}
+
+.modernHeroBottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding-top: 0.55rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.modernHeroLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.modernAttachBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-pill);
+  padding: 0.4rem 0.95rem;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modernAttachBtn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--text-primary);
+  border-color: rgba(52, 211, 153, 0.4);
+  transform: translateY(-1px);
+}
+
+.modernHeroSendBtn {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
+}
+
+.modernHeroSendBtn:hover:not(:disabled) {
+  transform: scale(1.06);
+  box-shadow: 0 0 22px rgba(6, 182, 212, 0.65);
+}
+
+.modernHeroSendBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+

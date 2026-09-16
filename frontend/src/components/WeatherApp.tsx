@@ -673,6 +673,7 @@ export default function WeatherApp() {
             }
             onNewChat={handleNewChat}
             onOpenSatellite={() => setShowSatellite(true)}
+            user={user}
           />
         </div>
 

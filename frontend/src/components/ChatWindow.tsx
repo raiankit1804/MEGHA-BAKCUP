@@ -13,8 +13,9 @@ import { marked } from 'marked';
 import WeatherCard from './WeatherCard';
 import { getTranslation } from '../i18n/translations';
 import styles from './ChatWindow.module.css';
-import { ChatMessage, DomainModeId, SessionLocation } from '../types/chat';
+import { ChatMessage, DomainModeId, SessionLocation, UserProfile } from '../types/chat';
 import { useTheme } from '../theme/ThemeProvider';
+import FuturisticOrb from './FuturisticOrb';
 
 marked.setOptions({ breaks: true, gfm: true });
 
@@ -28,6 +29,7 @@ export interface ChatWindowProps {
   heroInput?: React.ReactNode;
   onNewChat?: () => void;
   onOpenSatellite?: (mode?: string) => void;
+  user?: UserProfile | null;
 }
 
 export default function ChatWindow({
@@ -40,6 +42,7 @@ export default function ChatWindow({
   heroInput,
   onNewChat,
   onOpenSatellite,
+  user,
 }: ChatWindowProps) {
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
@@ -57,6 +60,7 @@ export default function ChatWindow({
           language={language}
           heroInput={heroInput}
           onNewChat={onNewChat}
+          user={user}
         />
       )}
       {messages.map((msg) => (
@@ -406,12 +410,86 @@ interface EmptyStateProps {
   language: string;
   heroInput?: React.ReactNode;
   onNewChat?: () => void;
+  user?: UserProfile | null;
 }
 
-function EmptyState({ onSend, location, language, heroInput, onNewChat }: EmptyStateProps) {
-  const { colorScheme, setColorScheme } = useTheme();
+function EmptyState({ onSend, location, domainFilter, language, heroInput, onNewChat, user }: EmptyStateProps) {
+  const { interfaceStyle, colorScheme, setColorScheme } = useTheme();
   const locName = location?.name && location.name !== 'Select location' ? location.name : null;
+  const userName = user?.name ? user.name.split(' ')[0] : 'Raf';
 
+  // ─── STRICT MODERN MODE: Futuristic Interactive UI matching screenshot ───
+  if (interfaceStyle === 'modern') {
+    return (
+      <div className={styles.futuristicContainer}>
+        {/* 1. Interactive Green 3D Fluid Object (Floating Orb) */}
+        <FuturisticOrb />
+
+        {/* 2. Futuristic Greeting */}
+        <div className={styles.futuristicGreeting}>
+          <div className={styles.greetingHey}>Hey! {userName}</div>
+          <div className={styles.greetingHelp}>What can I help with?</div>
+        </div>
+
+        {/* 3. Three Recommendation Cards with colored pill badges */}
+        <div className={styles.futuristicCardsRow}>
+          <button
+            type="button"
+            className={styles.futuristicCard}
+            onClick={() => onSend?.(locName ? `AgriSense farm weather and crop health advisory for ${locName}` : "What are the crop sowing and irrigation advisories?")}
+            title="Help with crop health & sowing advisory"
+          >
+            <span className={styles.cardBadgeCyan}>Content Help</span>
+            <span className={styles.futuristicCardSubtitle}>Help with crop health & sowing advisory</span>
+          </button>
+
+          <button
+            type="button"
+            className={styles.futuristicCard}
+            onClick={() => onSend?.(locName ? `Live Doppler radar, storm probability and IMD warnings for ${locName}` : "Show live IMD warnings and rain radar")}
+            title="Track storm probability & radar ideas"
+          >
+            <span className={styles.cardBadgeSalmon}>Suggestions</span>
+            <span className={styles.futuristicCardSubtitle}>Track storm probability & radar ideas</span>
+          </button>
+
+          <button
+            type="button"
+            className={styles.futuristicCard}
+            onClick={() => onSend?.(locName ? `Waterlogged roads and inundated underpasses near ${locName}` : "What roads and underpasses are waterlogged?")}
+            title="Help avoid flooded underpasses & commute delays"
+          >
+            <span className={styles.cardBadgeMint}>Job Application</span>
+            <span className={styles.futuristicCardSubtitle}>Help avoid flooded underpasses & commute delay</span>
+          </button>
+        </div>
+
+        {/* 4. Futuristic Sleek Chat Input */}
+        {heroInput && (
+          <div className={styles.futuristicInputWrapper}>
+            {heroInput}
+          </div>
+        )}
+
+        {/* 5. Detected Location Pill */}
+        {locName && (
+          <div className={styles.locationPill} style={{ marginTop: '1.25rem' }}>
+            <span className={styles.locDot}>📍</span>
+            <span>{getTranslation(language, 'detectedLocation', 'Detected Location')}: <strong>{locName}</strong></span>
+            <button
+              type="button"
+              className={styles.locCheckBtn}
+              onClick={() => onSend?.(`What is the current live weather in ${locName}?`)}
+            >
+              {getTranslation(language, 'checkWeather', 'Check Live Weather')}
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // ─── CLASSICAL MINIMAL LANDING (when interfaceStyle !== 'modern') ─────────
   const rawPrompts = getTranslation(language, 'quickPrompts') || [
     "What's the rain forecast and temperature today?",
     "3-day weather outlook and storm probability",
