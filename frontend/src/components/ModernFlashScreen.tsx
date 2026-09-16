@@ -34,7 +34,6 @@ export default function ModernFlashScreen({ onDone }: ModernFlashScreenProps) {
       role="dialog"
       aria-label="Modern Mode Initialized"
     >
-      <div className={styles.gridPlane} />
       <div className={styles.ambientShock} />
 
       <div className={styles.content}>
@@ -43,9 +42,9 @@ export default function ModernFlashScreen({ onDone }: ModernFlashScreenProps) {
           SYSTEM PROTOCOL // CYBER INTELLIGENCE
         </div>
 
-        {/* The interactive Futuristic Orb in the center */}
-        <div style={{ width: '220px', height: '220px', margin: '0 auto 1rem auto', position: 'relative' }}>
-          <FuturisticOrb isTyping={true} />
+        {/* The interactive Futuristic Orb cleanly sized without overlap or wireframe */}
+        <div style={{ width: '220px', height: '170px', margin: '0 auto 1.5rem auto', position: 'relative' }}>
+          <FuturisticOrb isTyping={true} height={170} showGrid={false} />
         </div>
 
         <h2 className={styles.title}>MEGHA-SETU</h2>

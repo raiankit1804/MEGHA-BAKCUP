@@ -9,6 +9,8 @@ interface FuturisticOrbProps {
   isTyping?: boolean;
   isListening?: boolean;
   onClick?: () => void;
+  height?: number | string;
+  showGrid?: boolean;
 }
 
 export default function FuturisticOrb({
@@ -18,6 +20,8 @@ export default function FuturisticOrb({
   isTyping = false,
   isListening = false,
   onClick,
+  height = 260,
+  showGrid = true,
 }: FuturisticOrbProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -123,37 +127,39 @@ export default function FuturisticOrb({
       ctx.clearRect(0, 0, width, height);
 
       // ─── 1. Background Cyber Matrix Grid ───────────────────────────────
-      const gridSize = 24;
-      const gridCols = Math.ceil(width / gridSize);
-      const gridRows = Math.ceil(height / gridSize);
+      if (showGrid) {
+        const gridSize = 24;
+        const gridCols = Math.ceil(width / gridSize);
+        const gridRows = Math.ceil(height / gridSize);
 
-      ctx.save();
-      ctx.lineWidth = 0.65;
+        ctx.save();
+        ctx.lineWidth = 0.65;
 
-      for (let x = 0; x <= gridCols; x++) {
-        const posX = x * gridSize;
-        const distFromCenter = Math.abs(posX - cx) / (width / 2);
-        const alpha = Math.max(0, 0.09 * (1 - distFromCenter * 0.9));
+        for (let x = 0; x <= gridCols; x++) {
+          const posX = x * gridSize;
+          const distFromCenter = Math.abs(posX - cx) / (width / 2);
+          const alpha = Math.max(0, 0.09 * (1 - distFromCenter * 0.9));
 
-        ctx.strokeStyle = `rgba(38, 222, 175, ${alpha})`;
-        ctx.beginPath();
-        ctx.moveTo(posX, 0);
-        ctx.lineTo(posX, height);
-        ctx.stroke();
+          ctx.strokeStyle = `rgba(38, 222, 175, ${alpha})`;
+          ctx.beginPath();
+          ctx.moveTo(posX, 0);
+          ctx.lineTo(posX, height);
+          ctx.stroke();
+        }
+
+        for (let y = 0; y <= gridRows; y++) {
+          const posY = y * gridSize;
+          const distFromCenter = Math.abs(posY - cy) / (height / 2);
+          const alpha = Math.max(0, 0.09 * (1 - distFromCenter * 0.9));
+
+          ctx.strokeStyle = `rgba(38, 222, 175, ${alpha})`;
+          ctx.beginPath();
+          ctx.moveTo(0, posY);
+          ctx.lineTo(width, posY);
+          ctx.stroke();
+        }
+        ctx.restore();
       }
-
-      for (let y = 0; y <= gridRows; y++) {
-        const posY = y * gridSize;
-        const distFromCenter = Math.abs(posY - cy) / (height / 2);
-        const alpha = Math.max(0, 0.09 * (1 - distFromCenter * 0.9));
-
-        ctx.strokeStyle = `rgba(38, 222, 175, ${alpha})`;
-        ctx.beginPath();
-        ctx.moveTo(0, posY);
-        ctx.lineTo(width, posY);
-        ctx.stroke();
-      }
-      ctx.restore();
 
       // ─── 2. Atmospheric Radial Ambient Glow ─────────────────────────────
       const ambientScale = isListening ? 1 + Math.sin(time * 5) * 0.15 : 1;
@@ -402,7 +408,7 @@ export default function FuturisticOrb({
         position: 'relative',
         width: '100%',
         maxWidth: 540,
-        height: 260,
+        height: typeof height === 'number' ? `${height}px` : height,
         margin: '0 auto 0.75rem auto',
         display: 'flex',
         alignItems: 'center',
@@ -473,19 +479,6 @@ export default function FuturisticOrb({
           `}</style>
         </div>
       )}
-
-      {/* Subtle bottom gradient to blend seamlessly into background */}
-      <div
-        style={{
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: '50px',
-          background: 'linear-gradient(to bottom, transparent, var(--bg-base))',
-          pointerEvents: 'none',
-        }}
-      />
     </div>
   );
 }
