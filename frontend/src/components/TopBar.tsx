@@ -319,11 +319,16 @@ function LocationSelector({ language, onSelect, onClose }: LocationSelectorProps
       return;
     }
     try {
-      const res = await fetch(
-        `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(q)}&count=5&language=en&format=json`
-      );
-      const data = await res.json();
-      setSuggestions((data.results || []).filter((r: any) => r.country_code === 'IN'));
+      const res = await api.get(`/api/location/search?q=${encodeURIComponent(q)}`);
+      if (Array.isArray(res) && res.length > 0) {
+        setSuggestions(res);
+      } else {
+        const omRes = await fetch(
+          `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(q)}&count=5&language=en&format=json`
+        );
+        const data = await omRes.json();
+        setSuggestions((data.results || []).filter((r: any) => r.country_code === 'IN'));
+      }
     } catch {
       setSuggestions([]);
     }
@@ -350,7 +355,7 @@ function LocationSelector({ language, onSelect, onClose }: LocationSelectorProps
             return;
           }
           const fullLoc = res.name || 'Bengaluru';
-          const state = res.admin1 || 'Karnataka';
+          const state = res.admin1 || res.state || 'Karnataka';
           const locObj = { latitude: lat, longitude: lon, name: fullLoc, state, source: 'gps' as const };
           try {
             localStorage.setItem('weathergpt_user_location', JSON.stringify(locObj));
@@ -390,11 +395,13 @@ function LocationSelector({ language, onSelect, onClose }: LocationSelectorProps
   };
 
   const bangaloreQuickSpots = [
+    { name: 'Ittagalpura, Bengaluru', lat: 13.1676, lon: 77.5456, state: 'Karnataka' },
+    { name: 'Presidency University, Bengaluru', lat: 13.1680, lon: 77.5362, state: 'Karnataka' },
+    { name: 'Yelahanka, Bengaluru', lat: 13.1007, lon: 77.5963, state: 'Karnataka' },
     { name: 'Bengaluru (Central)', lat: 12.9716, lon: 77.5946, state: 'Karnataka' },
     { name: 'Indiranagar, Bengaluru', lat: 12.9784, lon: 77.6408, state: 'Karnataka' },
     { name: 'Koramangala, Bengaluru', lat: 12.9352, lon: 77.6245, state: 'Karnataka' },
     { name: 'Whitefield, Bengaluru', lat: 12.9698, lon: 77.7500, state: 'Karnataka' },
-    { name: 'Yelahanka, Bengaluru', lat: 13.1007, lon: 77.5963, state: 'Karnataka' },
   ];
 
   return (
@@ -422,37 +429,45 @@ function LocationSelector({ language, onSelect, onClose }: LocationSelectorProps
           <button
             key={spot.name}
             style={dropItem}
-            onClick={() =>
-              onSelect({
+            onClick={() => {
+              const locObj = {
                 name: spot.name,
                 latitude: spot.lat,
                 longitude: spot.lon,
                 state: spot.state,
-                source: 'explicit',
-              })
-            }
+                source: 'explicit' as const,
+              };
+              try {
+                localStorage.setItem('weathergpt_user_location', JSON.stringify(locObj));
+              } catch {}
+              onSelect(locObj);
+            }}
           >
             <span style={{ fontWeight: 500 }}>{spot.name}</span>
             <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>{spot.state}</span>
           </button>
         ))}
 
-      {suggestions.map((s) => (
+      {suggestions.map((s, idx) => (
         <button
-          key={s.id}
+          key={s.id || `${s.latitude}-${s.longitude}-${idx}`}
           style={dropItem}
-          onClick={() =>
-            onSelect({
+          onClick={() => {
+            const locObj = {
               name: s.name,
               latitude: s.latitude,
               longitude: s.longitude,
-              state: s.admin1,
-              source: 'explicit',
-            })
-          }
+              state: s.state || s.admin1 || 'Karnataka',
+              source: 'explicit' as const,
+            };
+            try {
+              localStorage.setItem('weathergpt_user_location', JSON.stringify(locObj));
+            } catch {}
+            onSelect(locObj);
+          }}
         >
           <span style={{ fontWeight: 500 }}>{s.name}</span>
-          <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>{s.admin1}, India</span>
+          <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>{s.state || s.admin1 || 'Karnataka'}, India</span>
         </button>
       ))}
     </div>

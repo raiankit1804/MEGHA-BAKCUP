@@ -17,7 +17,10 @@ from core.session import (
 from core.intent import extract_intent
 from core.risk_engine import assess_risk, risk_records_to_dict
 from core.synthesizer import synthesize_response, generate_followup_chips
-from data.open_meteo import geocode_location, reverse_geocode, fetch_tier1, fetch_tier2_nwp, RateLimitError
+from data.open_meteo import (
+    geocode_location, reverse_geocode, fetch_tier1, fetch_tier2_nwp, RateLimitError,
+    LOCALITY_ALIASES, HEADERS
+)
 from data.wttr import fetch_wttr
 from data.synthetic import generate_synthetic_weather
 from data.imd_scraper import fetch_warnings_for_location
@@ -83,6 +86,96 @@ async def get_reverse_location(lat: float, lon: float):
         "admin1": "Karnataka",
         "country_code": "IN",
     }
+
+
+@router.get("/location/search")
+async def search_locations(q: str):
+    """Search for locations with high-granularity Indian localities, villages, and alias support."""
+    import httpx
+    clean_q = q.strip().lower()
+    if not clean_q or len(clean_q) < 2:
+        return []
+
+    results = []
+    seen = set()
+
+    # 1. Check local alias database
+    for alias_k, alias_val in LOCALITY_ALIASES.items():
+        if alias_k in clean_q or clean_q in alias_k:
+            key = f"{alias_val['latitude']:.3f},{alias_val['longitude']:.3f}"
+            if key not in seen:
+                seen.add(key)
+                results.append(alias_val)
+
+    # 2. Try Nominatim candidate expansion
+    candidates = [q.strip()]
+    if clean_q.endswith("pura") and not clean_q.endswith("apura"):
+        candidates.append(q.strip()[:-4] + "apura")
+    elif clean_q.endswith("apura"):
+        candidates.append(q.strip()[:-5] + "pura")
+
+    async with httpx.AsyncClient(headers=HEADERS, timeout=6) as client:
+        for cand in candidates:
+            try:
+                resp = await client.get(
+                    "https://nominatim.openstreetmap.org/search",
+                    params={"q": cand, "format": "json", "addressdetails": 1, "countrycodes": "in", "limit": 6},
+                )
+                if resp.status_code == 200:
+                    for item in resp.json():
+                        lat = float(item["lat"])
+                        lon = float(item["lon"])
+                        key = f"{lat:.3f},{lon:.3f}"
+                        if key in seen:
+                            continue
+                        seen.add(key)
+
+                        addr = item.get("address", {})
+                        village = addr.get("village")
+                        suburb = addr.get("suburb") or addr.get("neighbourhood") or addr.get("residential")
+                        city_district = addr.get("city_district")
+                        amenity = addr.get("amenity")
+                        p_name = item.get("name") or village or suburb or city_district or amenity or cand
+
+                        if "ittagal" in p_name.lower():
+                            p_name = "Ittagalpura"
+
+                        city = addr.get("city") or addr.get("town")
+                        if not city:
+                            sd = addr.get("state_district", "")
+                            if "Bengaluru" in sd or "Bangalore" in sd:
+                                city = "Bengaluru"
+                            elif sd:
+                                city = sd.replace(" District", "").replace(" Urban", "").replace(" Rural", "")
+                            else:
+                                county = addr.get("county", "")
+                                city = county.replace(" taluku", "").replace(" taluk", "") or "Bengaluru"
+
+                        state = addr.get("state", "Karnataka")
+                        display = f"{p_name}, {city}" if (city and city.lower() not in p_name.lower()) else p_name
+                        results.append({
+                            "name": display,
+                            "raw_name": p_name,
+                            "latitude": lat,
+                            "longitude": lon,
+                            "state": state,
+                            "country_code": "IN",
+                        })
+                if results:
+                    break
+            except Exception as exc:
+                logger.debug("Nominatim search candidate '%s' error: %s", cand, exc)
+
+    # 3. Fallback: Open-Meteo search if Nominatim returned empty
+    if not results:
+        try:
+            geo = await geocode_location(q)
+            if geo:
+                results.append(geo)
+        except Exception:
+            pass
+
+    return results[:8]
 
 
 @router.get("/location/detect")

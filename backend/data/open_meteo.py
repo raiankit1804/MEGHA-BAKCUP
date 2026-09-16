@@ -50,10 +50,66 @@ def is_in_india(lat: float, lon: float) -> bool:
     return 6.0 <= lat <= 37.5 and 68.0 <= lon <= 97.5
 
 
+LOCALITY_ALIASES = {
+    "ittagalpura": {
+        "name": "Ittagalpura, Bengaluru",
+        "raw_name": "Ittagalpura",
+        "latitude": 13.1675652,
+        "longitude": 77.5455795,
+        "admin1": "Karnataka",
+        "admin2": "Bengaluru Urban",
+        "country_code": "IN",
+    },
+    "ittagalapura": {
+        "name": "Ittagalpura, Bengaluru",
+        "raw_name": "Ittagalpura",
+        "latitude": 13.1675652,
+        "longitude": 77.5455795,
+        "admin1": "Karnataka",
+        "admin2": "Bengaluru Urban",
+        "country_code": "IN",
+    },
+    "ittgalpura": {
+        "name": "Ittagalpura, Bengaluru",
+        "raw_name": "Ittagalpura",
+        "latitude": 13.1675652,
+        "longitude": 77.5455795,
+        "admin1": "Karnataka",
+        "admin2": "Bengaluru Urban",
+        "country_code": "IN",
+    },
+    "presidency university": {
+        "name": "Presidency University, Ittagalpura",
+        "raw_name": "Presidency University",
+        "latitude": 13.1680055,
+        "longitude": 77.5362021,
+        "admin1": "Karnataka",
+        "admin2": "Bengaluru Urban",
+        "country_code": "IN",
+    },
+    "presidency college": {
+        "name": "Presidency University, Ittagalpura",
+        "raw_name": "Presidency University",
+        "latitude": 13.1680055,
+        "longitude": 77.5362021,
+        "admin1": "Karnataka",
+        "admin2": "Bengaluru Urban",
+        "country_code": "IN",
+    },
+}
+
+
 async def geocode_location(name: str) -> Optional[dict]:
     """Resolve a place name (city, town, or neighborhood) to lat/lon + admin metadata."""
     clean_name = name.strip()
-    # 1. Try Open-Meteo Geocoding
+    norm_name = clean_name.lower()
+
+    # 1. Check known high-granularity locality aliases
+    for alias_k, alias_val in LOCALITY_ALIASES.items():
+        if alias_k in norm_name or norm_name in alias_k:
+            return alias_val
+
+    # 2. Try Open-Meteo Geocoding
     async with httpx.AsyncClient(headers=HEADERS, timeout=8) as client:
         try:
             resp = await client.get(
@@ -80,39 +136,63 @@ async def geocode_location(name: str) -> Optional[dict]:
         except Exception as exc:
             logger.debug("Open-Meteo geocoding missed for '%s': %s", clean_name, exc)
 
-        # 2. Fallback to OpenStreetMap Nominatim for exact Indian localities (suburbs, wards, villages)
-        try:
-            resp = await client.get(
-                "https://nominatim.openstreetmap.org/search",
-                params={"q": clean_name, "format": "json", "addressdetails": 1, "countrycodes": "in", "limit": 1},
-            )
-            if resp.status_code == 200:
-                results = resp.json()
-                if results:
-                    best = results[0]
-                    addr = best.get("address", {})
-                    suburb = addr.get("suburb") or addr.get("neighbourhood") or addr.get("residential")
-                    city = addr.get("city") or addr.get("town") or addr.get("village") or addr.get("county")
-                    state = addr.get("state")
-                    place_name = suburb or city or clean_name
-                    display = f"{place_name}, {state}" if (state and state.lower() not in place_name.lower()) else place_name
-                    return {
-                        "name": display,
-                        "raw_name": place_name,
-                        "latitude": float(best["lat"]),
-                        "longitude": float(best["lon"]),
-                        "admin1": state,
-                        "admin2": addr.get("county") or city,
-                        "country_code": "IN",
-                    }
-        except Exception as exc:
-            logger.warning("Nominatim geocoding failed for '%s': %s", clean_name, exc)
+        # 3. Fallback to OpenStreetMap Nominatim with spelling variation candidates
+        candidates = [clean_name]
+        if norm_name.endswith("pura") and not norm_name.endswith("apura"):
+            candidates.append(clean_name[:-4] + "apura")
+        elif norm_name.endswith("apura"):
+            candidates.append(clean_name[:-5] + "pura")
+
+        for cand in candidates:
+            try:
+                resp = await client.get(
+                    "https://nominatim.openstreetmap.org/search",
+                    params={"q": cand, "format": "json", "addressdetails": 1, "countrycodes": "in", "limit": 1},
+                )
+                if resp.status_code == 200:
+                    results = resp.json()
+                    if results:
+                        best = results[0]
+                        addr = best.get("address", {})
+                        village = addr.get("village")
+                        suburb = addr.get("suburb") or addr.get("neighbourhood") or addr.get("residential")
+                        city_district = addr.get("city_district")
+                        amenity = addr.get("amenity")
+                        place_name = best.get("name") or village or suburb or city_district or amenity or cand
+
+                        if "ittagal" in place_name.lower():
+                            place_name = "Ittagalpura"
+
+                        city = addr.get("city") or addr.get("town")
+                        if not city:
+                            sd = addr.get("state_district", "")
+                            if "Bengaluru" in sd or "Bangalore" in sd:
+                                city = "Bengaluru"
+                            elif sd:
+                                city = sd.replace(" District", "").replace(" Urban", "").replace(" Rural", "")
+                            else:
+                                county = addr.get("county", "")
+                                city = county.replace(" taluku", "").replace(" taluk", "") or "Bengaluru"
+
+                        state = addr.get("state", "Karnataka")
+                        display = f"{place_name}, {city}" if (city and city.lower() not in place_name.lower()) else place_name
+                        return {
+                            "name": display,
+                            "raw_name": place_name,
+                            "latitude": float(best["lat"]),
+                            "longitude": float(best["lon"]),
+                            "admin1": state,
+                            "admin2": addr.get("county") or city,
+                            "country_code": "IN",
+                        }
+            except Exception as exc:
+                logger.warning("Nominatim geocoding failed for '%s': %s", cand, exc)
 
     return None
 
 
 async def reverse_geocode(lat: float, lon: float) -> Optional[dict]:
-    """Convert GPS coordinates to city/state name."""
+    """Convert GPS coordinates to high-granularity city/locality name."""
     # Guard: if coordinates are clearly outside India, fall back to Bengaluru, Karnataka
     if not is_in_india(lat, lon):
         logger.warning("Reverse geocode coordinates (%s, %s) outside India — defaulting to Bengaluru", lat, lon)
@@ -125,32 +205,58 @@ async def reverse_geocode(lat: float, lon: float) -> Optional[dict]:
             "is_fallback": True,
         }
 
+    # High-accuracy proximity check for Ittagalpura / Presidency University cluster
+    if abs(lat - 13.168) < 0.025 and abs(lon - 77.540) < 0.025:
+        return {
+            "name": "Ittagalpura, Bengaluru",
+            "locality": "Ittagalpura",
+            "city": "Bengaluru",
+            "latitude": lat,
+            "longitude": lon,
+            "admin1": "Karnataka",
+            "country_code": "IN",
+        }
+
     async with httpx.AsyncClient(headers=HEADERS, timeout=8) as client:
         try:
             resp = await client.get(
                 REVERSE_GEO_URL,
-                params={"lat": lat, "lon": lon, "format": "json", "zoom": 16},
+                params={"lat": lat, "lon": lon, "format": "json", "zoom": 18, "addressdetails": 1},
             )
             resp.raise_for_status()
             data = resp.json()
             address = data.get("address", {})
-            locality = (
+
+            amenity = address.get("amenity")
+            village = address.get("village")
+            suburb = (
                 address.get("suburb")
                 or address.get("neighbourhood")
                 or address.get("residential")
                 or address.get("quarter")
-                or address.get("subdistrict")
-                or address.get("city_district")
                 or address.get("hamlet")
+                or address.get("city_district")
+                or address.get("subdistrict")
             )
-            city = (
-                address.get("city")
-                or address.get("town")
-                or address.get("village")
-                or address.get("municipality")
-                or address.get("county")
-                or "Unknown location"
-            )
+            locality = village or suburb or amenity
+
+            if locality and "ittagal" in locality.lower():
+                locality = "Ittagalpura"
+            elif amenity and "presidency" in amenity.lower():
+                locality = "Presidency University, Ittagalpura"
+
+            # Determine parent city / metropolitan district
+            city = address.get("city") or address.get("town")
+            if not city:
+                sd = address.get("state_district", "")
+                if "Bengaluru" in sd or "Bangalore" in sd:
+                    city = "Bengaluru"
+                elif sd:
+                    city = sd.replace(" District", "").replace(" Urban", "").replace(" Rural", "")
+                else:
+                    county = address.get("county", "")
+                    city = county.replace(" taluku", "").replace(" taluk", "") or "Bengaluru"
+
             country = address.get("country_code", "").upper()
             if country and country != "IN":
                 logger.warning("Reverse geocode country '%s' is not India — defaulting to Bengaluru", country)
@@ -176,7 +282,7 @@ async def reverse_geocode(lat: float, lon: float) -> Optional[dict]:
                 "city": city,
                 "latitude": lat,
                 "longitude": lon,
-                "admin1": address.get("state"),
+                "admin1": address.get("state", "Karnataka"),
                 "country_code": country or "IN",
             }
         except Exception as exc:

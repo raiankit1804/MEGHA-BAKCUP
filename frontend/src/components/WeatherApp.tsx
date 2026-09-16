@@ -186,7 +186,7 @@ export default function WeatherApp() {
               return;
             }
             const fullLoc = res.name || 'Bengaluru';
-            const state = res.admin1 || 'Karnataka';
+            const state = res.admin1 || res.state || 'Karnataka';
             const locObj = { latitude: lat, longitude: lon, name: fullLoc, state, source: 'gps' as const };
             setSession((s) => ({
               ...s,
@@ -222,7 +222,7 @@ export default function WeatherApp() {
             })
             .catch(() => {});
         },
-        { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 5000 }
       );
     } else {
       api.get('/api/location/detect')
