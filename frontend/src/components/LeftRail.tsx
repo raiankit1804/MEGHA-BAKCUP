@@ -4,6 +4,14 @@ import { getTranslation } from '../i18n/translations';
 import { UserProfile } from '../types/chat';
 import { useTheme } from '../theme/ThemeProvider';
 
+export const DOMAIN_MODES = [
+  { id: 'normal', icon: '🏙️', label: 'City', desc: 'Urban weather & rain updates' },
+  { id: 'agriculture', icon: '🌾', label: 'AgriSense', desc: 'Crop advisory & irrigation' },
+  { id: 'aviation', icon: '✈️', label: 'SkyOps', desc: 'Visibility & METAR briefing' },
+  { id: 'marine', icon: '⚓', label: 'SeaCast', desc: 'Coastal winds & wave heights' },
+  { id: 'research', icon: '🔬', label: 'Climate X', desc: 'Historical anomalies & climate' },
+];
+
 export interface LeftRailProps {
   onNewChat: () => void;
   onToggleHistory: () => void;
@@ -18,6 +26,9 @@ export interface LeftRailProps {
   isHistoryOpen?: boolean;
   isMobileDrawerOpen?: boolean;
   onCloseMobileDrawer?: () => void;
+  onOpenMobileDrawer?: () => void;
+  domainFilter?: string;
+  onDomainChange?: (modeId: string) => void;
 }
 
 export default function LeftRail({
@@ -34,9 +45,13 @@ export default function LeftRail({
   isHistoryOpen = false,
   isMobileDrawerOpen = false,
   onCloseMobileDrawer,
+  onOpenMobileDrawer,
+  domainFilter = 'normal',
+  onDomainChange,
 }: LeftRailProps) {
   const { interfaceStyle, colorScheme, setColorScheme } = useTheme();
   const [isHovered, setIsHovered] = useState(false);
+  const currentModeObj = DOMAIN_MODES.find((m) => m.id === domainFilter) || DOMAIN_MODES[0];
 
   return (
     <>
@@ -52,6 +67,24 @@ export default function LeftRail({
       >
         {/* Top Section */}
         <div className={styles.topGroup}>
+          {/* Hamburger Menu button at top (toggles drawer on any screen) */}
+          <button
+            type="button"
+            className={styles.railHamburgerBtn}
+            onClick={onOpenMobileDrawer}
+            title="Open Menu (☰)"
+            aria-label="Open Navigation Menu"
+          >
+            <span className={styles.btnIcon}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+              </svg>
+            </span>
+            <span className={styles.btnLabel} style={{ fontWeight: 600 }}>Menu</span>
+          </button>
+
           {/* MEGHA SETU Brand Logo with gentle micro-animation */}
           <div className={styles.logoBtn} onClick={onNewChat} title="MEGHA SETU — Home" aria-label="MEGHA SETU Home">
             <img
@@ -219,6 +252,45 @@ export default function LeftRail({
                 <span style={{ fontSize: '1.1rem', fontWeight: 700 }}>＋</span>
                 <span>{getTranslation(language, 'newChat', 'New chat')}</span>
               </button>
+
+              {/* Intelligence Domain Modes */}
+              <div className={styles.drawerSection}>
+                <div className={styles.drawerSectionHeader}>
+                  <span>INTELLIGENCE MODES</span>
+                  {currentModeObj && (
+                    <span className={styles.drawerActiveDomainBadge}>
+                      {currentModeObj.icon} {currentModeObj.label}
+                    </span>
+                  )}
+                </div>
+                <div className={styles.drawerModesList}>
+                  {DOMAIN_MODES.map((mode) => {
+                    const isSel = domainFilter === mode.id;
+                    return (
+                      <button
+                        key={mode.id}
+                        type="button"
+                        className={`${styles.drawerModeBtn} ${isSel ? styles.drawerModeBtnActive : ''}`}
+                        onClick={() => {
+                          onDomainChange?.(mode.id);
+                          onCloseMobileDrawer?.();
+                        }}
+                      >
+                        <span className={styles.drawerModeIcon}>{mode.icon}</span>
+                        <div className={styles.drawerModeInfo}>
+                          <div className={styles.drawerModeHeaderRow}>
+                            <span className={styles.drawerModeTitle}>{mode.label}</span>
+                            {isSel && <span className={styles.drawerModeActivePill}>ACTIVE</span>}
+                          </div>
+                          <span className={styles.drawerModeDesc}>{mode.desc}</span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className={styles.drawerDivider} />
 
               {/* Chat History */}
               <button

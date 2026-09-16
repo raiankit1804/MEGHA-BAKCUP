@@ -94,9 +94,7 @@ export default function WeatherApp() {
   const [showSatellite, setShowSatellite] = useState(false);
   const [showLanguageModal, setShowLanguageModal] = useState(false);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
-  const [showMobileModeMenu, setShowMobileModeMenu] = useState(false);
   const [isListening, setIsListening] = useState(false);
-  const mobileModeMenuRef = useRef<HTMLDivElement | null>(null);
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [sessionsList, setSessionsList] = useState<SavedSession[]>([]);
@@ -136,16 +134,6 @@ export default function WeatherApp() {
   const [activeWarnings, setActiveWarnings] = useState<IMDWarning[]>([]);
 
   const currentModeObj = DOMAIN_MODES.find((m) => m.id === session.domainFilter) || DOMAIN_MODES[0];
-
-  useEffect(() => {
-    const handleOut = (e: MouseEvent) => {
-      if (mobileModeMenuRef.current && !mobileModeMenuRef.current.contains(e.target as Node)) {
-        setShowMobileModeMenu(false);
-      }
-    };
-    document.addEventListener('mousedown', handleOut);
-    return () => document.removeEventListener('mousedown', handleOut);
-  }, []);
 
   // Check URL params for Google OAuth token callback & initialize user
   useEffect(() => {
@@ -490,82 +478,39 @@ export default function WeatherApp() {
         isHistoryOpen={showHistory}
         isMobileDrawerOpen={isMobileDrawerOpen}
         onCloseMobileDrawer={() => setIsMobileDrawerOpen(false)}
+        onOpenMobileDrawer={() => setIsMobileDrawerOpen(true)}
+        domainFilter={session.domainFilter}
+        onDomainChange={handleDomainFilter}
       />
 
       {/* Main Content Area */}
       <div style={mainStage}>
         {/* Mobile Navigation Header (Only visible on screens <= 680px) */}
         <header className="mobileTopBar">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', minWidth: 0, flex: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', minWidth: 0, flex: 1 }}>
             <button
               type="button"
               onClick={() => setIsMobileDrawerOpen(true)}
               aria-label="Open Navigation Menu"
               style={mobileMenuBtn}
+              title="Open Navigation Menu (☰)"
             >
-              <span style={{ fontSize: '1.25rem', lineHeight: 1 }}>☰</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+              </svg>
             </button>
             <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', flexShrink: 0 }} onClick={handleNewChat}>
               <img
                 src="/megha_setu_phone.png"
                 alt="MEGHA SETU"
-                style={{ height: 26, width: 'auto', objectFit: 'contain' }}
+                style={{ height: 28, width: 'auto', objectFit: 'contain' }}
               />
-            </div>
-
-            {/* Mode selector on top in phone view (above side, not in chat box) */}
-            <div style={{ position: 'relative' }} ref={mobileModeMenuRef}>
-              <button
-                type="button"
-                onClick={() => setShowMobileModeMenu((v) => !v)}
-                style={mobileModePillBtn}
-                aria-label="Switch Intelligence Mode"
-                title="Switch mode: City, AgriSense, SkyOps, SeaCast, Climate X"
-              >
-                <span>{currentModeObj.icon}</span>
-                <span style={{ fontWeight: 600, fontSize: '0.8rem', color: 'var(--text-headline)', whiteSpace: 'nowrap' }}>
-                  {currentModeObj.label}
-                </span>
-                <span style={{ fontSize: '0.62rem', opacity: 0.7 }}>▾</span>
-              </button>
-
-              {showMobileModeMenu && (
-                <div style={mobileModeDropdownMenu} role="menu">
-                  <div style={mobileDropdownHeader}>Intelligence Domain</div>
-                  {DOMAIN_MODES.map((mode) => {
-                    const isSel = session.domainFilter === mode.id;
-                    return (
-                      <button
-                        key={mode.id}
-                        type="button"
-                        style={{
-                          ...mobileModeOptionBtn,
-                          background: isSel ? 'var(--bg-glass-hover)' : 'transparent',
-                        }}
-                        onClick={() => {
-                          handleDomainFilter(mode.id);
-                          setShowMobileModeMenu(false);
-                        }}
-                      >
-                        <span style={{ fontSize: '1.05rem', width: 22, textAlign: 'center' }}>{mode.icon}</span>
-                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', flex: 1, minWidth: 0 }}>
-                          <span style={{ fontWeight: 600, fontSize: '0.82rem', color: isSel ? 'var(--accent-primary)' : 'var(--text-headline)' }}>
-                            {mode.label}
-                          </span>
-                          <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%' }}>
-                            {mode.desc}
-                          </span>
-                        </div>
-                        {isSel && <span style={{ color: 'var(--accent-primary)', fontWeight: 700, fontSize: '0.85rem' }}>✓</span>}
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
             </div>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', flexShrink: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', flexShrink: 0 }}>
             <button
               type="button"
               onClick={handleNewChat}
@@ -573,18 +518,21 @@ export default function WeatherApp() {
               title="New Chat"
               aria-label="New chat"
             >
-              <span>＋</span>
+              <span style={{ fontSize: '1.1rem', fontWeight: 600 }}>＋</span>
             </button>
             <button
               type="button"
               onClick={() => setShowProfile(true)}
               style={mobileHeaderAvatarBtn}
               aria-label="Account"
+              title={user?.name || 'Account'}
             >
               {user?.avatar_url ? (
-                <img src={user.avatar_url} alt="" style={{ width: '100%', height: '100%', borderRadius: '50%' }} />
+                <img src={user.avatar_url} alt="" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
               ) : (
-                <span>{user?.name ? user.name.charAt(0).toUpperCase() : '👤'}</span>
+                <span style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--text-headline)' }}>
+                  {user?.name ? user.name.charAt(0).toUpperCase() : '👤'}
+                </span>
               )}
             </button>
           </div>
@@ -902,55 +850,3 @@ const mobileHeaderAvatarBtn: React.CSSProperties = {
   flexShrink: 0,
 };
 
-const mobileModePillBtn: React.CSSProperties = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: '0.3rem',
-  padding: '0.28rem 0.6rem',
-  background: 'var(--bg-glass)',
-  border: '1px solid var(--border-subtle)',
-  borderRadius: 'var(--radius-pill)',
-  color: 'var(--text-primary)',
-  cursor: 'pointer',
-  transition: 'all 0.15s ease',
-  outline: 'none',
-};
-
-const mobileModeDropdownMenu: React.CSSProperties = {
-  position: 'absolute',
-  top: 'calc(100% + 8px)',
-  left: 0,
-  width: 255,
-  background: 'var(--bg-surface)',
-  border: '1px solid var(--border-card)',
-  borderRadius: 'var(--radius-lg)',
-  boxShadow: '0 16px 40px rgba(0, 0, 0, 0.55)',
-  padding: '0.35rem',
-  zIndex: 350,
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '0.15rem',
-};
-
-const mobileDropdownHeader: React.CSSProperties = {
-  padding: '0.35rem 0.55rem 0.2rem',
-  fontSize: '0.66rem',
-  fontWeight: 700,
-  color: 'var(--text-muted)',
-  textTransform: 'uppercase',
-  letterSpacing: '0.04em',
-};
-
-const mobileModeOptionBtn: React.CSSProperties = {
-  display: 'flex',
-  alignItems: 'center',
-  gap: '0.6rem',
-  padding: '0.5rem 0.6rem',
-  border: 'none',
-  borderRadius: 'var(--radius-md)',
-  cursor: 'pointer',
-  textAlign: 'left',
-  width: '100%',
-  color: 'var(--text-primary)',
-  boxSizing: 'border-box',
-};
