@@ -34,23 +34,25 @@ export default function FuturisticOrb({
 
   // Shockwave on click
   const triggerPulse = useCallback(() => {
+    const canvas = canvasRef.current;
+    const maxR = canvas ? Math.min(canvas.clientWidth, canvas.clientHeight) * 0.44 : 85;
     shockwavesRef.current.push({
-      radius: 30,
-      maxRadius: 180,
-      opacity: 0.9,
-      speed: 4.5,
+      radius: 18,
+      maxRadius: maxR,
+      opacity: 0.85,
+      speed: 3.6,
     });
     // Add burst particles
-    for (let i = 0; i < 24; i++) {
-      const angle = (Math.PI * 2 * i) / 24 + (Math.random() - 0.5) * 0.4;
-      const speed = 2 + Math.random() * 4;
+    for (let i = 0; i < 20; i++) {
+      const angle = (Math.PI * 2 * i) / 20 + (Math.random() - 0.5) * 0.4;
+      const speed = 1.6 + Math.random() * 2.8;
       particlesRef.current.push({
         x: 0,
         y: 0,
         vx: Math.cos(angle) * speed,
         vy: Math.sin(angle) * speed,
-        size: 1.5 + Math.random() * 2.5,
-        alpha: 1,
+        size: 1.5 + Math.random() * 2,
+        alpha: 0.9,
         life: 1,
       });
     }
@@ -135,24 +137,38 @@ export default function FuturisticOrb({
         ctx.save();
         ctx.lineWidth = 0.65;
 
+        // Vertical grid lines with edge gradient fade
         for (let x = 0; x <= gridCols; x++) {
           const posX = x * gridSize;
           const distFromCenter = Math.abs(posX - cx) / (width / 2);
-          const alpha = Math.max(0, 0.09 * (1 - distFromCenter * 0.9));
+          const alpha = Math.max(0, 0.08 * (1 - distFromCenter * 0.9));
 
-          ctx.strokeStyle = `rgba(38, 222, 175, ${alpha})`;
+          const vGrad = ctx.createLinearGradient(0, 0, 0, height);
+          vGrad.addColorStop(0, 'rgba(38, 222, 175, 0)');
+          vGrad.addColorStop(0.2, `rgba(38, 222, 175, ${alpha})`);
+          vGrad.addColorStop(0.8, `rgba(38, 222, 175, ${alpha})`);
+          vGrad.addColorStop(1, 'rgba(38, 222, 175, 0)');
+
+          ctx.strokeStyle = vGrad;
           ctx.beginPath();
           ctx.moveTo(posX, 0);
           ctx.lineTo(posX, height);
           ctx.stroke();
         }
 
+        // Horizontal grid lines with edge gradient fade
         for (let y = 0; y <= gridRows; y++) {
           const posY = y * gridSize;
           const distFromCenter = Math.abs(posY - cy) / (height / 2);
-          const alpha = Math.max(0, 0.09 * (1 - distFromCenter * 0.9));
+          const alpha = Math.max(0, 0.08 * (1 - distFromCenter * 0.9));
 
-          ctx.strokeStyle = `rgba(38, 222, 175, ${alpha})`;
+          const hGrad = ctx.createLinearGradient(0, 0, width, 0);
+          hGrad.addColorStop(0, 'rgba(38, 222, 175, 0)');
+          hGrad.addColorStop(0.2, `rgba(38, 222, 175, ${alpha})`);
+          hGrad.addColorStop(0.8, `rgba(38, 222, 175, ${alpha})`);
+          hGrad.addColorStop(1, 'rgba(38, 222, 175, 0)');
+
+          ctx.strokeStyle = hGrad;
           ctx.beginPath();
           ctx.moveTo(0, posY);
           ctx.lineTo(width, posY);
@@ -188,10 +204,10 @@ export default function FuturisticOrb({
       // When listening: dynamically emit acoustic energy wave rings
       if (isListening && Math.floor(time * 50) % 22 === 0) {
         shockwavesRef.current.push({
-          radius: Math.min(width, height) * 0.3,
-          maxRadius: Math.min(width, height) * 0.72,
-          opacity: 0.85,
-          speed: 4.5,
+          radius: Math.min(width, height) * 0.24,
+          maxRadius: Math.min(width, height) * 0.44,
+          opacity: 0.82,
+          speed: 3.2,
         });
       }
 
@@ -199,15 +215,15 @@ export default function FuturisticOrb({
       for (let i = shockwavesRef.current.length - 1; i >= 0; i--) {
         const sw = shockwavesRef.current[i];
         sw.radius += sw.speed;
-        sw.opacity *= 0.94;
+        sw.opacity *= 0.93;
 
         ctx.save();
         ctx.beginPath();
         ctx.arc(cx, cy, sw.radius, 0, Math.PI * 2);
         ctx.strokeStyle = isListening ? `rgba(110, 231, 183, ${sw.opacity})` : `rgba(52, 211, 153, ${sw.opacity})`;
-        ctx.lineWidth = isListening ? 3.0 : 2.5;
+        ctx.lineWidth = isListening ? 2.5 : 2.0;
         ctx.shadowColor = '#34d399';
-        ctx.shadowBlur = isListening ? 22 : 15;
+        ctx.shadowBlur = isListening ? 18 : 12;
         ctx.stroke();
         ctx.restore();
 
@@ -217,10 +233,11 @@ export default function FuturisticOrb({
       }
 
       // ─── 4. 3D Fluid Organic Orb Rendering ──────────────────────────────
-      // Orb center offset by mouse tilt
-      const orbX = cx + mouseRef.current.x * 24;
-      const orbY = cy + mouseRef.current.y * 18;
-      const baseRadius = Math.min(width, height) * 0.32 * (mouseRef.current.isOver ? 1.06 : 1.0) * (isListening ? (1 + Math.sin(time * 6) * 0.07) : 1.0);
+      // Orb center offset by gentle mouse tilt (strictly bounded to prevent edge clipping)
+      const orbX = cx + mouseRef.current.x * 12;
+      const orbY = cy + mouseRef.current.y * 10;
+      const maxDimension = Math.min(width, height);
+      const baseRadius = maxDimension * 0.22 * (mouseRef.current.isOver ? 1.05 : 1.0) * (isListening ? (1 + Math.sin(time * 6) * 0.05) : 1.0);
 
       // Render layered harmonic fluid wave shells (back to front)
       const numLayers = 4;
@@ -228,23 +245,23 @@ export default function FuturisticOrb({
         ctx.save();
 
         const layerProgress = l / numLayers;
-        const layerRadius = baseRadius * (0.82 + layerProgress * 0.22);
+        const layerRadius = baseRadius * (0.85 + layerProgress * 0.18);
         const points = 48;
 
         ctx.beginPath();
         for (let i = 0; i <= points; i++) {
           const angle = (i / points) * Math.PI * 2;
 
-          // Multi-harmonic organic fluid deformation
-          const wave1 = Math.sin(angle * 3 + time * 1.2 + l * 0.8) * 14;
-          const wave2 = Math.cos(angle * 5 - time * 1.5 + l * 1.2) * 9;
-          const wave3 = Math.sin(angle * 2 + time * 0.7) * (isTyping ? 12 : 6);
+          // Multi-harmonic organic fluid deformation - safely proportional to baseRadius
+          const wave1 = Math.sin(angle * 3 + time * 1.2 + l * 0.8) * (baseRadius * 0.12);
+          const wave2 = Math.cos(angle * 5 - time * 1.5 + l * 1.2) * (baseRadius * 0.08);
+          const wave3 = Math.sin(angle * 2 + time * 0.7) * (isTyping ? baseRadius * 0.12 : baseRadius * 0.06);
           const voiceDeform = isListening
-            ? Math.sin(angle * 7 + time * 4.2) * 16 + Math.cos(angle * 4 - time * 3.5) * 12
+            ? (Math.sin(angle * 7 + time * 4.2) * 0.12 + Math.cos(angle * 4 - time * 3.5) * 0.08) * baseRadius
             : 0;
           const mouseDeform =
             Math.sin(angle - Math.atan2(mouseRef.current.y, mouseRef.current.x)) *
-            (mouseRef.current.isOver ? 16 : 7);
+            (mouseRef.current.isOver ? baseRadius * 0.12 : baseRadius * 0.05);
 
           const r = layerRadius + wave1 + wave2 + wave3 + voiceDeform + mouseDeform;
           const px = orbX + Math.cos(angle) * r;
@@ -354,9 +371,10 @@ export default function FuturisticOrb({
 
         // Gentle orbital pull towards the orb
         const dist = Math.hypot(p.x, p.y);
-        if (dist > 180) {
-          p.vx -= (p.x / dist) * 0.08;
-          p.vy -= (p.y / dist) * 0.08;
+        const maxOrbDist = maxDimension * 0.42;
+        if (dist > maxOrbDist) {
+          p.vx -= (p.x / dist) * 0.14;
+          p.vy -= (p.y / dist) * 0.14;
         }
 
         ctx.beginPath();
@@ -371,7 +389,7 @@ export default function FuturisticOrb({
         if (p.alpha <= 0.05) {
           // Respawn in vicinity
           const angle = Math.random() * Math.PI * 2;
-          const spawnDist = baseRadius * (0.8 + Math.random() * 0.5);
+          const spawnDist = baseRadius * (0.8 + Math.random() * 0.4);
           p.x = Math.cos(angle) * spawnDist;
           p.y = Math.sin(angle) * spawnDist;
           p.vx = (Math.random() - 0.5) * 0.8;
@@ -409,7 +427,7 @@ export default function FuturisticOrb({
         width: '100%',
         maxWidth: 540,
         height: typeof height === 'number' ? `${height}px` : height,
-        margin: '0 auto 0.75rem auto',
+        margin: '0 auto 0.4rem auto',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -417,6 +435,7 @@ export default function FuturisticOrb({
         userSelect: 'none',
         transform: isHovered ? 'scale(1.02)' : 'scale(1)',
         transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+        overflow: 'visible',
       }}
       title="Interactive AI Core — Click to pulse energy"
       aria-label="Interactive AI Fluid Core"

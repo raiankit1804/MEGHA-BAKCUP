@@ -720,10 +720,10 @@
   height: 100%;
   max-height: 100%;
   margin: auto;
-  padding: 0.25rem 1rem 0.5rem 1rem;
+  padding: 0.2rem 1rem 0.4rem 1rem;
   animation: fadeIn 0.4s ease-out;
   box-sizing: border-box;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .futuristicGreeting {
@@ -733,7 +733,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-bottom: 0.95rem;
+  margin-bottom: 0.75rem;
 }
 
 .greetingHey {
@@ -766,7 +766,7 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 0.85rem;
   width: 100%;
-  margin-bottom: 1.15rem;
+  margin-bottom: 0.85rem;
 }
 
 .futuristicCard {

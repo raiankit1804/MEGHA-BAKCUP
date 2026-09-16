@@ -434,7 +434,7 @@ function EmptyState({ onSend, location, domainFilter, language, heroInput, onNew
     return (
       <div className={styles.futuristicContainer}>
         {/* 1. Interactive Green 3D Fluid Object (Floating Orb) */}
-        <FuturisticOrb isListening={isListening} height="clamp(135px, 18vh, 190px)" />
+        <FuturisticOrb isListening={isListening} height="clamp(165px, 21vh, 210px)" />
 
         {/* 2. Futuristic Greeting */}
         <div className={styles.futuristicGreeting}>
