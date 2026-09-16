@@ -1,0 +1,190 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: #060913;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  animation: flashIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+  cursor: pointer;
+}
+
+.flashDismissing {
+  animation: flashOut 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes flashIn {
+  from {
+    opacity: 0;
+    transform: scale(1.04);
+    filter: brightness(2) contrast(1.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+    filter: brightness(1) contrast(1);
+  }
+}
+
+@keyframes flashOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.97);
+    filter: brightness(1.6) blur(6px);
+  }
+}
+
+/* Perspective Cyber Grid Matrix */
+.gridPlane {
+  position: absolute;
+  inset: -50%;
+  background-image: 
+    linear-gradient(rgba(16, 185, 129, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 185, 129, 0.09) 1px, transparent 1px);
+  background-size: 32px 32px;
+  background-position: center center;
+  transform: perspective(600px) rotateX(25deg);
+  transform-origin: center center;
+  opacity: 0.85;
+  pointer-events: none;
+  animation: gridFloat 10s linear infinite;
+}
+
+@keyframes gridFloat {
+  0% { transform: perspective(600px) rotateX(25deg) translateY(0); }
+  100% { transform: perspective(600px) rotateX(25deg) translateY(32px); }
+}
+
+/* Ambient Radial Shockwave Glow */
+.ambientShock {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(720px, 90vw);
+  height: min(720px, 90vw);
+  background: radial-gradient(
+    circle,
+    rgba(16, 185, 129, 0.35) 0%,
+    rgba(6, 182, 212, 0.2) 30%,
+    rgba(5, 150, 105, 0.08) 55%,
+    transparent 75%
+  );
+  filter: blur(40px);
+  pointer-events: none;
+  animation: pulseGlow 1.4s ease-in-out infinite alternate;
+}
+
+@keyframes pulseGlow {
+  0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.7; }
+  100% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+}
+
+/* Content Container */
+.content {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  max-width: 580px;
+  width: 100%;
+  padding: 1.5rem;
+}
+
+/* HUD System Tag */
+.hudTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.95rem;
+  border-radius: 9999px;
+  background: rgba(6, 78, 59, 0.6);
+  border: 1px solid rgba(52, 211, 153, 0.4);
+  color: #6ee7b7;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+  backdrop-filter: blur(12px);
+}
+
+.hudDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 10px #34d399;
+  animation: hudDotBlink 0.7s infinite alternate;
+}
+
+@keyframes hudDotBlink {
+  0% { opacity: 0.4; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1.2); }
+}
+
+/* Title & Subtitle */
+.title {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  margin-bottom: 0.35rem;
+  text-shadow: 0 0 25px rgba(52, 211, 153, 0.45);
+}
+
+.subtitle {
+  font-size: 0.92rem;
+  color: #94a3b8;
+  letter-spacing: 0.04em;
+  margin-bottom: 1.5rem;
+}
+
+/* Futuristic Neon Progress Track */
+.progressTrack {
+  width: 240px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+.progressFill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #06b6d4, #10b981, #34d399);
+  border-radius: 9999px;
+  box-shadow: 0 0 12px #34d399;
+  animation: loadProgress 1.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes loadProgress {
+  0% { width: 0%; }
+  50% { width: 65%; }
+  100% { width: 100%; }
+}
+
+/* Interaction Hint */
+.hint {
+  margin-top: 1rem;
+  font-size: 0.72rem;
+  color: #64748b;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}

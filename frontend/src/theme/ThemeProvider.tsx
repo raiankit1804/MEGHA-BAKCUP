@@ -2,12 +2,15 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
+import ModernFlashScreen from '../components/ModernFlashScreen';
+
 export interface ThemeContextType {
   interfaceStyle: string;
   setInterfaceStyle: (style: string) => void;
   colorScheme: string;
   setColorScheme: (scheme: string) => void;
   themeKey: string;
+  triggerModernFlash: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | null>(null);
@@ -15,6 +18,7 @@ const ThemeContext = createContext<ThemeContextType | null>(null);
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [interfaceStyle, setInterfaceStyleState] = useState<string>('modern');
   const [colorScheme, setColorSchemeState] = useState<string>('dark');
+  const [showModernFlash, setShowModernFlash] = useState<boolean>(false);
   const [mounted, setMounted] = useState<boolean>(false);
 
   useEffect(() => {
@@ -26,11 +30,16 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     setMounted(true);
   }, []);
 
+  const triggerModernFlash = () => {
+    setShowModernFlash(true);
+  };
+
   const setInterfaceStyle = (style: string) => {
-    setInterfaceStyleState(style);
     if (style === 'modern') {
+      setShowModernFlash(true);
       setColorSchemeState('dark');
     }
+    setInterfaceStyleState(style);
   };
 
   const setColorScheme = (scheme: string) => {
@@ -54,7 +63,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, [themeKey, interfaceStyle, effectiveColorScheme, mounted]);
 
   return (
-    <ThemeContext.Provider value={{ interfaceStyle, setInterfaceStyle, colorScheme: effectiveColorScheme, setColorScheme, themeKey }}>
+    <ThemeContext.Provider value={{ interfaceStyle, setInterfaceStyle, colorScheme: effectiveColorScheme, setColorScheme, themeKey, triggerModernFlash }}>
+      {showModernFlash && <ModernFlashScreen onDone={() => setShowModernFlash(false)} />}
       {children}
     </ThemeContext.Provider>
   );
