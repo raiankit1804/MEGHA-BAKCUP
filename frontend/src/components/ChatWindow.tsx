@@ -420,7 +420,6 @@ interface EmptyStateProps {
 function EmptyState({ onSend, location, domainFilter, language, heroInput, onNewChat, user, isListening = false }: EmptyStateProps) {
   const { interfaceStyle, colorScheme, setColorScheme } = useTheme();
   const locName = location?.name && location.name !== 'Select location' ? location.name : null;
-  const userName = user?.name ? user.name.split(' ')[0] : 'Raf';
 
   // ─── STRICT MODERN MODE: Futuristic Interactive UI matching screenshot ───
   if (interfaceStyle === 'modern') {
@@ -431,7 +430,6 @@ function EmptyState({ onSend, location, domainFilter, language, heroInput, onNew
 
         {/* 2. Futuristic Greeting */}
         <div className={styles.futuristicGreeting}>
-          <div className={styles.greetingHey}>Hey! {userName}</div>
           <div className={styles.greetingHelp}>What can I help with?</div>
         </div>
 
