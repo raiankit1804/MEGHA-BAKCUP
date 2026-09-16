@@ -109,42 +109,31 @@ export default function ProfileMenu({ user, onClose, onSettingsChange }: Profile
           </div>
         </div>
 
-        {/* Color Scheme */}
-        <div style={section}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
-            <label style={sectionLabel}>Color Scheme</label>
-            {interfaceStyle === 'modern' && (
-              <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', background: 'var(--bg-glass)', padding: '0.15rem 0.5rem', borderRadius: '4px' }}>
-                Dark only in Modern mode
-              </span>
-            )}
-          </div>
-          <div style={toggleRow}>
-            {[['dark', '🌙 Dark'], ['light', '☀️ Light']].map(([val, lbl]) => {
-              const isLockedLight = interfaceStyle === 'modern' && val === 'light';
-              return (
-                <button
-                  key={val}
-                  disabled={isLockedLight}
-                  style={{
-                    ...toggleChip,
-                    borderColor: colorScheme === val ? 'var(--accent-primary)' : 'var(--border-subtle)',
-                    color: colorScheme === val ? 'var(--accent-primary)' : 'var(--text-secondary)',
-                    background: colorScheme === val ? 'var(--badge-bg)' : 'var(--bg-glass)',
-                    opacity: isLockedLight ? 0.35 : 1,
-                    cursor: isLockedLight ? 'not-allowed' : 'pointer',
-                  }}
-                  onClick={() => !isLockedLight && updateColorScheme(val)}
-                  title={isLockedLight ? 'Modern mode is exclusively designed in dark futuristic theme' : undefined}
-                >
-                  {lbl}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        <div style={divider} />
+        {/* Color Scheme - hidden in modern view since modern mode is dark-only */}
+        {interfaceStyle !== 'modern' && (
+          <>
+            <div style={section}>
+              <label style={sectionLabel}>Color Scheme</label>
+              <div style={toggleRow}>
+                {[['dark', '🌙 Dark'], ['light', '☀️ Light']].map(([val, lbl]) => (
+                  <button
+                    key={val}
+                    style={{
+                      ...toggleChip,
+                      borderColor: colorScheme === val ? 'var(--accent-primary)' : 'var(--border-subtle)',
+                      color: colorScheme === val ? 'var(--accent-primary)' : 'var(--text-secondary)',
+                      background: colorScheme === val ? 'var(--badge-bg)' : 'var(--bg-glass)',
+                    }}
+                    onClick={() => updateColorScheme(val)}
+                  >
+                    {lbl}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div style={divider} />
+          </>
+        )}
 
         {/* Chat History */}
         <div style={section}>
