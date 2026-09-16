@@ -474,21 +474,6 @@ function EmptyState({ onSend, location, domainFilter, language, heroInput, onNew
             {heroInput}
           </div>
         )}
-
-        {/* 5. Detected Location Pill */}
-        {locName && (
-          <div className={styles.locationPill} style={{ marginTop: '1.25rem' }}>
-            <span className={styles.locDot}>📍</span>
-            <span>{getTranslation(language, 'detectedLocation', 'Detected Location')}: <strong>{locName}</strong></span>
-            <button
-              type="button"
-              className={styles.locCheckBtn}
-              onClick={() => onSend?.(`What is the current live weather in ${locName}?`)}
-            >
-              {getTranslation(language, 'checkWeather', 'Check Live Weather')}
-            </button>
-          </div>
-        )}
       </div>
     );
   }
@@ -511,20 +496,6 @@ function EmptyState({ onSend, location, domainFilter, language, heroInput, onNew
       <h1 className={styles.geminiTitle}>
         {greeting}
       </h1>
-
-      {locName && (
-        <div className={styles.locationPill}>
-          <span className={styles.locDot}>📍</span>
-          <span>{getTranslation(language, 'detectedLocation', 'Detected Location')}: <strong>{locName}</strong></span>
-          <button
-            type="button"
-            className={styles.locCheckBtn}
-            onClick={() => onSend?.(locName ? `What is the weather in ${locName}?` : localizedQuestions[0])}
-          >
-            {getTranslation(language, 'checkWeather', 'Check Live Weather')}
-          </button>
-        </div>
-      )}
 
       {/* Center Input Holder */}
       {heroInput && (
