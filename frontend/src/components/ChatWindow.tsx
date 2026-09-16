@@ -30,6 +30,7 @@ export interface ChatWindowProps {
   onNewChat?: () => void;
   onOpenSatellite?: (mode?: string) => void;
   user?: UserProfile | null;
+  isListening?: boolean;
 }
 
 export default function ChatWindow({
@@ -43,6 +44,7 @@ export default function ChatWindow({
   onNewChat,
   onOpenSatellite,
   user,
+  isListening = false,
 }: ChatWindowProps) {
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
@@ -61,6 +63,7 @@ export default function ChatWindow({
           heroInput={heroInput}
           onNewChat={onNewChat}
           user={user}
+          isListening={isListening}
         />
       )}
       {messages.map((msg) => (
@@ -411,9 +414,10 @@ interface EmptyStateProps {
   heroInput?: React.ReactNode;
   onNewChat?: () => void;
   user?: UserProfile | null;
+  isListening?: boolean;
 }
 
-function EmptyState({ onSend, location, domainFilter, language, heroInput, onNewChat, user }: EmptyStateProps) {
+function EmptyState({ onSend, location, domainFilter, language, heroInput, onNewChat, user, isListening = false }: EmptyStateProps) {
   const { interfaceStyle, colorScheme, setColorScheme } = useTheme();
   const locName = location?.name && location.name !== 'Select location' ? location.name : null;
   const userName = user?.name ? user.name.split(' ')[0] : 'Raf';
@@ -423,7 +427,7 @@ function EmptyState({ onSend, location, domainFilter, language, heroInput, onNew
     return (
       <div className={styles.futuristicContainer}>
         {/* 1. Interactive Green 3D Fluid Object (Floating Orb) */}
-        <FuturisticOrb />
+        <FuturisticOrb isListening={isListening} />
 
         {/* 2. Futuristic Greeting */}
         <div className={styles.futuristicGreeting}>

@@ -7,6 +7,7 @@ interface FuturisticOrbProps {
   secondaryColor?: string;
   accentColor?: string;
   isTyping?: boolean;
+  isListening?: boolean;
   onClick?: () => void;
 }
 
@@ -15,6 +16,7 @@ export default function FuturisticOrb({
   secondaryColor = '#06b6d4',   // Ethereal cyan / teal
   accentColor = '#34d399',      // Bright mint highlight
   isTyping = false,
+  isListening = false,
   onClick,
 }: FuturisticOrbProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -154,16 +156,17 @@ export default function FuturisticOrb({
       ctx.restore();
 
       // ─── 2. Atmospheric Radial Ambient Glow ─────────────────────────────
+      const ambientScale = isListening ? 1 + Math.sin(time * 5) * 0.15 : 1;
       const glowGrad = ctx.createRadialGradient(
         cx + mouseRef.current.x * 25,
         cy + mouseRef.current.y * 20,
         15,
         cx,
         cy,
-        Math.min(width, height) * 0.65
+        Math.min(width, height) * (isListening ? 0.8 : 0.65) * ambientScale
       );
-      glowGrad.addColorStop(0, 'rgba(16, 185, 129, 0.28)');
-      glowGrad.addColorStop(0.35, 'rgba(6, 182, 212, 0.16)');
+      glowGrad.addColorStop(0, isListening ? 'rgba(52, 211, 153, 0.52)' : 'rgba(16, 185, 129, 0.28)');
+      glowGrad.addColorStop(0.35, isListening ? 'rgba(6, 182, 212, 0.32)' : 'rgba(6, 182, 212, 0.16)');
       glowGrad.addColorStop(0.7, 'rgba(16, 185, 129, 0.04)');
       glowGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
 
@@ -173,7 +176,18 @@ export default function FuturisticOrb({
       // Speed multipliers based on interaction
       const hoverSpeed = mouseRef.current.isOver ? 2.0 : 1.0;
       const typingSpeed = isTyping ? 1.8 : 1.0;
-      time += 0.022 * hoverSpeed * typingSpeed;
+      const listeningSpeed = isListening ? 2.6 : 1.0;
+      time += 0.022 * hoverSpeed * typingSpeed * listeningSpeed;
+
+      // When listening: dynamically emit acoustic energy wave rings
+      if (isListening && Math.floor(time * 50) % 22 === 0) {
+        shockwavesRef.current.push({
+          radius: Math.min(width, height) * 0.3,
+          maxRadius: Math.min(width, height) * 0.72,
+          opacity: 0.85,
+          speed: 4.5,
+        });
+      }
 
       // ─── 3. Shockwave Rings ─────────────────────────────────────────────
       for (let i = shockwavesRef.current.length - 1; i >= 0; i--) {
@@ -184,10 +198,10 @@ export default function FuturisticOrb({
         ctx.save();
         ctx.beginPath();
         ctx.arc(cx, cy, sw.radius, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(52, 211, 153, ${sw.opacity})`;
-        ctx.lineWidth = 2.5;
+        ctx.strokeStyle = isListening ? `rgba(110, 231, 183, ${sw.opacity})` : `rgba(52, 211, 153, ${sw.opacity})`;
+        ctx.lineWidth = isListening ? 3.0 : 2.5;
         ctx.shadowColor = '#34d399';
-        ctx.shadowBlur = 15;
+        ctx.shadowBlur = isListening ? 22 : 15;
         ctx.stroke();
         ctx.restore();
 
@@ -200,7 +214,7 @@ export default function FuturisticOrb({
       // Orb center offset by mouse tilt
       const orbX = cx + mouseRef.current.x * 24;
       const orbY = cy + mouseRef.current.y * 18;
-      const baseRadius = Math.min(width, height) * 0.32 * (mouseRef.current.isOver ? 1.06 : 1.0);
+      const baseRadius = Math.min(width, height) * 0.32 * (mouseRef.current.isOver ? 1.06 : 1.0) * (isListening ? (1 + Math.sin(time * 6) * 0.07) : 1.0);
 
       // Render layered harmonic fluid wave shells (back to front)
       const numLayers = 4;
@@ -219,11 +233,14 @@ export default function FuturisticOrb({
           const wave1 = Math.sin(angle * 3 + time * 1.2 + l * 0.8) * 14;
           const wave2 = Math.cos(angle * 5 - time * 1.5 + l * 1.2) * 9;
           const wave3 = Math.sin(angle * 2 + time * 0.7) * (isTyping ? 12 : 6);
+          const voiceDeform = isListening
+            ? Math.sin(angle * 7 + time * 4.2) * 16 + Math.cos(angle * 4 - time * 3.5) * 12
+            : 0;
           const mouseDeform =
             Math.sin(angle - Math.atan2(mouseRef.current.y, mouseRef.current.x)) *
             (mouseRef.current.isOver ? 16 : 7);
 
-          const r = layerRadius + wave1 + wave2 + wave3 + mouseDeform;
+          const r = layerRadius + wave1 + wave2 + wave3 + voiceDeform + mouseDeform;
           const px = orbX + Math.cos(angle) * r;
           const py = orbY + Math.sin(angle) * r;
 
@@ -367,7 +384,7 @@ export default function FuturisticOrb({
       cancelAnimationFrame(animId);
       window.removeEventListener('resize', resize);
     };
-  }, [isTyping]);
+  }, [isTyping, isListening]);
 
   return (
     <div
@@ -406,6 +423,57 @@ export default function FuturisticOrb({
           display: 'block',
         }}
       />
+
+      {/* Dynamic Listening Indicator when Mic is active */}
+      {isListening && (
+        <div
+          style={{
+            position: 'absolute',
+            bottom: '12px',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.65rem',
+            padding: '0.45rem 1.15rem',
+            borderRadius: '9999px',
+            background: 'rgba(5, 46, 38, 0.94)',
+            border: '1.5px solid #34d399',
+            boxShadow: '0 0 25px rgba(52, 211, 153, 0.6), 0 4px 16px rgba(0, 0, 0, 0.5)',
+            backdropFilter: 'blur(12px)',
+            color: '#ecfdf5',
+            fontSize: '0.86rem',
+            fontWeight: 600,
+            letterSpacing: '0.02em',
+            zIndex: 15,
+            pointerEvents: 'none',
+            animation: 'fadeIn 0.25s ease-out',
+          }}
+        >
+          <span style={{ fontSize: '1.05rem', filter: 'drop-shadow(0 0 6px #34d399)' }}>🎙️</span>
+          <span>Listening... Speak now</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '3px', height: '14px', marginLeft: '0.25rem' }}>
+            {[1, 2, 3, 4, 5].map((i) => (
+              <span
+                key={i}
+                style={{
+                  width: '3px',
+                  height: '100%',
+                  background: 'linear-gradient(to top, #10b981, #34d399)',
+                  borderRadius: '3px',
+                  boxShadow: '0 0 6px #34d399',
+                  animation: `equalizerBounce 0.6s ease-in-out infinite alternate ${i * 0.12}s`,
+                }}
+              />
+            ))}
+          </div>
+          <style>{`
+            @keyframes equalizerBounce {
+              0% { transform: scaleY(0.2); }
+              100% { transform: scaleY(1.35); }
+            }
+          `}</style>
+        </div>
+      )}
+
       {/* Subtle bottom gradient to blend seamlessly into background */}
       <div
         style={{

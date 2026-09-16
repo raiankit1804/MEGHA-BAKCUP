@@ -41,6 +41,7 @@ export interface ChatInputProps {
   onDomainChange?: (domain: DomainModeId | string) => void;
   onOpenSatellite?: () => void;
   isHero?: boolean;
+  onListeningChange?: (listening: boolean) => void;
 }
 
 export default function ChatInput({
@@ -51,9 +52,14 @@ export default function ChatInput({
   onDomainChange,
   onOpenSatellite,
   isHero = false,
+  onListeningChange,
 }: ChatInputProps) {
   const [query, setQuery] = useState('');
   const [recording, setRecording] = useState(false);
+
+  useEffect(() => {
+    onListeningChange?.(recording);
+  }, [recording, onListeningChange]);
   const [showModeMenu, setShowModeMenu] = useState(false);
   const [modeGlow, setModeGlow] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);

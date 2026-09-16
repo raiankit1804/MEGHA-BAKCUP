@@ -35,7 +35,7 @@ export default function LeftRail({
   isMobileDrawerOpen = false,
   onCloseMobileDrawer,
 }: LeftRailProps) {
-  const { colorScheme, setColorScheme } = useTheme();
+  const { interfaceStyle, colorScheme, setColorScheme } = useTheme();
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -144,21 +144,23 @@ export default function LeftRail({
 
         {/* Bottom Section: Theme Toggle, Settings & User Profile */}
         <div className={styles.bottomGroup}>
-          {/* Quick Theme Toggle (Light / Dark) */}
-          <button
-            type="button"
-            className={styles.railBtn}
-            onClick={() => setColorScheme(colorScheme === 'dark' ? 'light' : 'dark')}
-            title={colorScheme === 'dark' ? 'Switch to Light Mode (#fff8eb)' : 'Switch to Dark Mode'}
-            aria-label="Toggle light/dark theme"
-          >
-            <span className={styles.btnIcon} style={{ fontSize: '1.15rem' }}>
-              {colorScheme === 'dark' ? '☀️' : '🌙'}
-            </span>
-            <span className={styles.btnLabel}>
-              {colorScheme === 'dark' ? 'Light Mode' : 'Dark Mode'}
-            </span>
-          </button>
+          {/* Quick Theme Toggle (Light / Dark) - Only in Minimal mode */}
+          {interfaceStyle !== 'modern' && (
+            <button
+              type="button"
+              className={styles.railBtn}
+              onClick={() => setColorScheme(colorScheme === 'dark' ? 'light' : 'dark')}
+              title={colorScheme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              aria-label="Toggle light/dark theme"
+            >
+              <span className={styles.btnIcon} style={{ fontSize: '1.15rem' }}>
+                {colorScheme === 'dark' ? '☀️' : '🌙'}
+              </span>
+              <span className={styles.btnLabel}>
+                {colorScheme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+              </span>
+            </button>
+          )}
 
           {/* Settings */}
           <button
@@ -305,17 +307,19 @@ export default function LeftRail({
                 </span>
               </button>
 
-              {/* Theme Toggle */}
-              <button
-                type="button"
-                className={styles.mobileMenuItem}
-                onClick={() => setColorScheme(colorScheme === 'dark' ? 'light' : 'dark')}
-              >
-                <span className={styles.itemIcon}>{colorScheme === 'dark' ? '☀️' : '🌙'}</span>
-                <span className={styles.itemLabel}>
-                  {colorScheme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-                </span>
-              </button>
+              {/* Theme Toggle (Only in Minimal mode) */}
+              {interfaceStyle !== 'modern' && (
+                <button
+                  type="button"
+                  className={styles.mobileMenuItem}
+                  onClick={() => setColorScheme(colorScheme === 'dark' ? 'light' : 'dark')}
+                >
+                  <span className={styles.itemIcon}>{colorScheme === 'dark' ? '☀️' : '🌙'}</span>
+                  <span className={styles.itemLabel}>
+                    {colorScheme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                  </span>
+                </button>
+              )}
 
               {/* Settings */}
               <button

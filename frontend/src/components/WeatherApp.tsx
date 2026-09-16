@@ -95,6 +95,7 @@ export default function WeatherApp() {
   const [showLanguageModal, setShowLanguageModal] = useState(false);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
   const [showMobileModeMenu, setShowMobileModeMenu] = useState(false);
+  const [isListening, setIsListening] = useState(false);
   const mobileModeMenuRef = useRef<HTMLDivElement | null>(null);
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -669,11 +670,13 @@ export default function WeatherApp() {
                 onDomainChange={handleDomainFilter}
                 onOpenSatellite={() => setShowSatellite(true)}
                 isHero={true}
+                onListeningChange={setIsListening}
               />
             }
             onNewChat={handleNewChat}
             onOpenSatellite={() => setShowSatellite(true)}
             user={user}
+            isListening={isListening}
           />
         </div>
 
