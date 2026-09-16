@@ -29,7 +29,7 @@ export default function TopBar({
   onOpenSatellite,
   hasWarnings = false,
 }: TopBarProps) {
-  const { interfaceStyle, colorScheme, setColorScheme } = useTheme();
+  const { interfaceStyle } = useTheme();
   const [showLocPicker, setShowLocPicker] = useState(false);
 
   const locationName = session?.sessionLocation?.name || 'Bengaluru, Karnataka';
@@ -150,26 +150,6 @@ export default function TopBar({
 
         {/* 22 Indian Languages selector */}
         <LanguageToggle value={language} onChange={onLanguageChange} />
-
-        {/* Quick Light/Dark Toggle Button (Only for Minimal mode — Modern mode is strictly dark) */}
-        {interfaceStyle !== 'modern' && (
-          <button
-            type="button"
-            onClick={() => setColorScheme(colorScheme === 'dark' ? 'light' : 'dark')}
-            style={{
-              ...actionPillBtn,
-              background: colorScheme === 'light' ? 'rgba(171, 0, 91, 0.12)' : 'var(--bg-glass)',
-              borderColor: colorScheme === 'light' ? 'var(--accent-primary)' : 'var(--border-subtle)',
-            }}
-            title={colorScheme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-            aria-label="Toggle light/dark theme"
-          >
-            <span style={{ fontSize: '0.95rem' }}>{colorScheme === 'dark' ? '☀️' : '🌙'}</span>
-            <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-primary)' }}>
-              {colorScheme === 'dark' ? 'Light' : 'Dark'}
-            </span>
-          </button>
-        )}
 
         {/* Far-Right Profile Menu Button */}
         <ProfileButton user={user} onClick={onProfileClick} />

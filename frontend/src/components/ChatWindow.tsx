@@ -424,7 +424,7 @@ interface EmptyStateProps {
 }
 
 function EmptyState({ onSend, location, domainFilter, language, heroInput, onNewChat, user, isListening = false }: EmptyStateProps) {
-  const { interfaceStyle, colorScheme, setColorScheme } = useTheme();
+  const { interfaceStyle } = useTheme();
   const locName = location?.name && location.name !== 'Select location' ? location.name : null;
 
   // ─── STRICT MODERN MODE: Futuristic Interactive UI matching screenshot ───

@@ -14,7 +14,7 @@ export interface ProfileMenuProps {
 }
 
 export default function ProfileMenu({ user, onClose, onSettingsChange }: ProfileMenuProps) {
-  const { interfaceStyle, setInterfaceStyle, colorScheme, setColorScheme } = useTheme();
+  const { interfaceStyle, setInterfaceStyle } = useTheme();
   const [historyOptIn, setHistoryOptIn] = useState(user?.history_opt_in ?? false);
   const [clearing, setClearing] = useState(false);
 
@@ -23,16 +23,24 @@ export default function ProfileMenu({ user, onClose, onSettingsChange }: Profile
   };
 
   const handleLogout = async () => {
-    await api.post('/api/auth/logout', {});
+    try {
+      await api.post('/api/auth/logout', {});
+    } catch {
+      /* non-critical */
+    }
+    localStorage.removeItem('auth_token');
     window.location.reload();
   };
 
   const handleHistoryToggle = async () => {
-    const newVal = !historyOptIn;
-    setHistoryOptIn(newVal);
+    const next = !historyOptIn;
+    setHistoryOptIn(next);
     if (user) {
-      await api.patch('/api/user', { history_opt_in: newVal });
-      onSettingsChange?.({ history_opt_in: newVal });
+      try {
+        await api.patch('/api/user', { history_opt_in: next });
+      } catch {
+        /* non-critical */
+      }
     }
   };
 
@@ -50,11 +58,6 @@ export default function ProfileMenu({ user, onClose, onSettingsChange }: Profile
   const updateInterfaceStyle = (style: string) => {
     setInterfaceStyle(style);
     if (user) api.patch('/api/user', { interface_style: style }).catch(() => {});
-  };
-
-  const updateColorScheme = (scheme: string) => {
-    setColorScheme(scheme);
-    if (user) api.patch('/api/user', { color_scheme: scheme }).catch(() => {});
   };
 
   return (
@@ -108,32 +111,6 @@ export default function ProfileMenu({ user, onClose, onSettingsChange }: Profile
             ))}
           </div>
         </div>
-
-        {/* Color Scheme - hidden in modern view since modern mode is dark-only */}
-        {interfaceStyle !== 'modern' && (
-          <>
-            <div style={section}>
-              <label style={sectionLabel}>Color Scheme</label>
-              <div style={toggleRow}>
-                {[['dark', '🌙 Dark'], ['light', '☀️ Light']].map(([val, lbl]) => (
-                  <button
-                    key={val}
-                    style={{
-                      ...toggleChip,
-                      borderColor: colorScheme === val ? 'var(--accent-primary)' : 'var(--border-subtle)',
-                      color: colorScheme === val ? 'var(--accent-primary)' : 'var(--text-secondary)',
-                      background: colorScheme === val ? 'var(--badge-bg)' : 'var(--bg-glass)',
-                    }}
-                    onClick={() => updateColorScheme(val)}
-                  >
-                    {lbl}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div style={divider} />
-          </>
-        )}
 
         {/* Chat History */}
         <div style={section}>
