@@ -94,15 +94,16 @@
   color: var(--text-primary);
   font-family: var(--font-body);
   font-size: 0.95rem;
-  line-height: 1.5;
-  padding: 0.35rem 0.25rem;
-  min-height: 28px;
+  line-height: 1.55;
+  padding: 0.42rem 0.25rem;
+  min-height: 32px;
   max-height: 160px;
   overflow-y: auto;
 }
 
 .textarea::placeholder {
   color: var(--text-muted);
+  line-height: 1.55;
 }
 
 .rightControls {
@@ -123,7 +124,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.35rem 0.75rem;
+  padding: 0.38rem 0.75rem;
   background: var(--bg-glass);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-pill);
@@ -131,6 +132,7 @@
   font-size: 0.82rem;
   font-weight: 500;
   font-family: var(--font-body);
+  line-height: 1.4;
   cursor: pointer;
   transition: all var(--transition-fast);
 }
@@ -463,15 +465,16 @@
   color: var(--text-primary) !important;
   font-family: var(--font-body) !important;
   font-size: 1.05rem !important;
-  line-height: 1.5 !important;
-  padding: 0.2rem 0 !important;
-  min-height: 48px !important;
+  line-height: 1.6 !important;
+  padding: 0.35rem 0 !important;
+  min-height: 52px !important;
   max-height: 180px !important;
 }
 
 .modernHeroTextarea::placeholder {
   color: var(--text-muted) !important;
   font-size: 1.02rem !important;
+  line-height: 1.6 !important;
 }
 
 .modernHeroBottom {

@@ -16,7 +16,7 @@ html {
   overflow-x: hidden;
 }
 body {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'Inter', 'Noto Sans Bengali', 'Noto Sans Devanagari', 'Noto Sans Telugu', 'Noto Sans Tamil', 'Kohinoor Bangla', 'Bangla Sangam MN', system-ui, sans-serif;
   font-size: 16px;
   line-height: 1.6;
   background: var(--bg-base);
@@ -108,8 +108,8 @@ body {
   --anim-enabled:    1;
 
   /* Typography */
-  --font-body:       'Inter', system-ui, sans-serif;
-  --font-headline:   'Outfit', 'Inter', sans-serif;
+  --font-body:       'Inter', 'Noto Sans Bengali', 'Noto Sans Devanagari', 'Noto Sans Telugu', 'Noto Sans Tamil', 'Kohinoor Bangla', 'Bangla Sangam MN', system-ui, sans-serif;
+  --font-headline:   'Outfit', 'Inter', 'Noto Sans Bengali', 'Noto Sans Devanagari', 'Noto Sans Telugu', 'Noto Sans Tamil', 'Kohinoor Bangla', 'Bangla Sangam MN', system-ui, sans-serif;
 }
 
 /* ════════════════════════════════════════════════════════════════════════════
@@ -181,8 +181,8 @@ body {
   --transition-slow: 600ms ease;
   --anim-enabled:    1;
 
-  --font-body:       'Inter', system-ui, sans-serif;
-  --font-headline:   'Outfit', 'Inter', sans-serif;
+  --font-body:       'Inter', 'Noto Sans Bengali', 'Noto Sans Devanagari', 'Noto Sans Telugu', 'Noto Sans Tamil', 'Kohinoor Bangla', 'Bangla Sangam MN', system-ui, sans-serif;
+  --font-headline:   'Outfit', 'Inter', 'Noto Sans Bengali', 'Noto Sans Devanagari', 'Noto Sans Telugu', 'Noto Sans Tamil', 'Kohinoor Bangla', 'Bangla Sangam MN', system-ui, sans-serif;
 }
 
 /* ════════════════════════════════════════════════════════════════════════════
@@ -255,8 +255,8 @@ body {
   --transition-slow: 200ms ease;
   --anim-enabled:    0;
 
-  --font-body:       'Inter', system-ui, sans-serif;
-  --font-headline:   'Inter', system-ui, sans-serif;
+  --font-body:       'Inter', 'Noto Sans Bengali', 'Noto Sans Devanagari', 'Noto Sans Telugu', 'Noto Sans Tamil', 'Kohinoor Bangla', 'Bangla Sangam MN', system-ui, sans-serif;
+  --font-headline:   'Inter', 'Noto Sans Bengali', 'Noto Sans Devanagari', 'Noto Sans Telugu', 'Noto Sans Tamil', 'Kohinoor Bangla', 'Bangla Sangam MN', system-ui, sans-serif;
 }
 
 /* ════════════════════════════════════════════════════════════════════════════
@@ -328,8 +328,8 @@ body {
   --transition-slow: 200ms ease;
   --anim-enabled:    0;
 
-  --font-body:       'Inter', system-ui, sans-serif;
-  --font-headline:   'Inter', system-ui, sans-serif;
+  --font-body:       'Inter', 'Noto Sans Bengali', 'Noto Sans Devanagari', 'Noto Sans Telugu', 'Noto Sans Tamil', 'Kohinoor Bangla', 'Bangla Sangam MN', system-ui, sans-serif;
+  --font-headline:   'Inter', 'Noto Sans Bengali', 'Noto Sans Devanagari', 'Noto Sans Telugu', 'Noto Sans Tamil', 'Kohinoor Bangla', 'Bangla Sangam MN', system-ui, sans-serif;
 }
 
 /* ─── prefers-reduced-motion ─────────────────────────────────────────────── */
