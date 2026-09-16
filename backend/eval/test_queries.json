@@ -1,0 +1,229 @@
+[
+  {
+    "id": 1,
+    "query": "What is the temperature and humidity in Delhi today?",
+    "expected_intent": "urban_general",
+    "expected_domain": "normal",
+    "expected_location": "Delhi",
+    "expected_time_horizon": "today",
+    "language": "en"
+  },
+  {
+    "id": 2,
+    "query": "Will it rain in Mumbai tomorrow afternoon?",
+    "expected_intent": "urban_general",
+    "expected_domain": "normal",
+    "expected_location": "Mumbai",
+    "expected_time_horizon": "tomorrow",
+    "language": "en"
+  },
+  {
+    "id": 3,
+    "query": "बेंगलुरु में आज का मौसम कैसा है?",
+    "expected_intent": "urban_general",
+    "expected_domain": "normal",
+    "expected_location": "Bengaluru",
+    "expected_time_horizon": "today",
+    "language": "hi"
+  },
+  {
+    "id": 4,
+    "query": "சென்னையில் இன்று மழை பெய்யுமா?",
+    "expected_intent": "urban_general",
+    "expected_domain": "normal",
+    "expected_location": "Chennai",
+    "expected_time_horizon": "today",
+    "language": "ta"
+  },
+  {
+    "id": 5,
+    "query": "Is it safe to spray pesticide on wheat crop in Ludhiana today?",
+    "expected_intent": "agriculture",
+    "expected_domain": "agriculture",
+    "expected_location": "Ludhiana",
+    "expected_time_horizon": "today",
+    "language": "en"
+  },
+  {
+    "id": 6,
+    "query": "Soil moisture and irrigation advisory for cotton in Nagpur this week",
+    "expected_intent": "agriculture",
+    "expected_domain": "agriculture",
+    "expected_location": "Nagpur",
+    "expected_time_horizon": "weekly",
+    "language": "en"
+  },
+  {
+    "id": 7,
+    "query": "क्या जयपुर में बाजरे की बुवाई के लिए मौसम अनुकूल है?",
+    "expected_intent": "agriculture",
+    "expected_domain": "agriculture",
+    "expected_location": "Jaipur",
+    "expected_time_horizon": "current",
+    "language": "hi"
+  },
+  {
+    "id": 8,
+    "query": "What is the crosswind and runway visibility at Hyderabad airport?",
+    "expected_intent": "aviation",
+    "expected_domain": "aviation_marine",
+    "expected_location": "Hyderabad",
+    "expected_time_horizon": "current",
+    "language": "en"
+  },
+  {
+    "id": 9,
+    "query": "Sea state and wave height for fishermen near Visakhapatnam port",
+    "expected_intent": "marine",
+    "expected_domain": "aviation_marine",
+    "expected_location": "Visakhapatnam",
+    "expected_time_horizon": "current",
+    "language": "en"
+  },
+  {
+    "id": 10,
+    "query": "കൊച്ചി തീരത്ത് മത്സ്യബന്ധനത്തിന് തടസ്സമുണ്ടോ?",
+    "expected_intent": "marine",
+    "expected_domain": "aviation_marine",
+    "expected_location": "Kochi",
+    "expected_time_horizon": "current",
+    "language": "ml"
+  },
+  {
+    "id": 11,
+    "query": "Show temperature anomaly trend in Kolkata compared to 30-year baseline",
+    "expected_intent": "climate_research",
+    "expected_domain": "study_research",
+    "expected_location": "Kolkata",
+    "expected_time_horizon": "historical",
+    "language": "en"
+  },
+  {
+    "id": 12,
+    "query": "How does this year's monsoon rainfall in Pune compare to the 1991-2020 average?",
+    "expected_intent": "climate_research",
+    "expected_domain": "study_research",
+    "expected_location": "Pune",
+    "expected_time_horizon": "historical",
+    "language": "en"
+  },
+  {
+    "id": 13,
+    "query": "Any cyclone or severe rain warning issued by IMD for Odisha coast?",
+    "expected_intent": "disaster_warning",
+    "expected_domain": "normal",
+    "expected_location": "Bhubaneswar",
+    "expected_time_horizon": "current",
+    "language": "en"
+  },
+  {
+    "id": 14,
+    "query": "Heatwave alert and maximum temperature forecast for Ahmedabad next 3 days",
+    "expected_intent": "disaster_warning",
+    "expected_domain": "normal",
+    "expected_location": "Ahmedabad",
+    "expected_time_horizon": "next_3_days",
+    "language": "en"
+  },
+  {
+    "id": 15,
+    "query": "What is the AQI and PM2.5 level in Lucknow right now?",
+    "expected_intent": "urban_general",
+    "expected_domain": "normal",
+    "expected_location": "Lucknow",
+    "expected_time_horizon": "current",
+    "language": "en"
+  },
+  {
+    "id": 16,
+    "query": "কলকাতায় কি কাল ভারী বৃষ্টির সম্ভাবনা আছে?",
+    "expected_intent": "urban_general",
+    "expected_domain": "normal",
+    "expected_location": "Kolkata",
+    "expected_time_horizon": "tomorrow",
+    "language": "bn"
+  },
+  {
+    "id": 17,
+    "query": "Cloud ceiling and turbulence risk along Delhi to Srinagar flight route",
+    "expected_intent": "aviation",
+    "expected_domain": "aviation_marine",
+    "expected_location": "Srinagar",
+    "expected_time_horizon": "current",
+    "language": "en"
+  },
+  {
+    "id": 18,
+    "query": "Sugarcane fungal disease risk based on current humidity in Meerut",
+    "expected_intent": "agriculture",
+    "expected_domain": "agriculture",
+    "expected_location": "Meerut",
+    "expected_time_horizon": "current",
+    "language": "en"
+  },
+  {
+    "id": 19,
+    "query": "High tide timings and gust speeds at Mumbai Gateway of India today",
+    "expected_intent": "marine",
+    "expected_domain": "aviation_marine",
+    "expected_location": "Mumbai",
+    "expected_time_horizon": "today",
+    "language": "en"
+  },
+  {
+    "id": 20,
+    "query": "Decadal warming rate for Shimla winters from 1980 to 2020",
+    "expected_intent": "climate_research",
+    "expected_domain": "study_research",
+    "expected_location": "Shimla",
+    "expected_time_horizon": "historical",
+    "language": "en"
+  },
+  {
+    "id": 21,
+    "query": "What about tomorrow?",
+    "expected_intent": "urban_general",
+    "expected_domain": "normal",
+    "expected_location": "India",
+    "expected_time_horizon": "tomorrow",
+    "is_followup": true,
+    "language": "en"
+  },
+  {
+    "id": 22,
+    "query": "Will the wind pick up by evening?",
+    "expected_intent": "urban_general",
+    "expected_domain": "normal",
+    "expected_location": "India",
+    "expected_time_horizon": "today",
+    "is_followup": true,
+    "language": "en"
+  },
+  {
+    "id": 23,
+    "query": "Can I harvest paddy today in Varanasi?",
+    "expected_intent": "agriculture",
+    "expected_domain": "agriculture",
+    "expected_location": "Varanasi",
+    "expected_time_horizon": "today",
+    "language": "en"
+  },
+  {
+    "id": 24,
+    "query": "హైదరాబాద్‌లో ఈరోజు వర్షం పడుతుందా?",
+    "expected_intent": "urban_general",
+    "expected_domain": "normal",
+    "expected_location": "Hyderabad",
+    "expected_time_horizon": "today",
+    "language": "te"
+  },
+  {
+    "id": 25,
+    "query": "Fog and low visibility warning for flights arriving at Amritsar",
+    "expected_intent": "aviation",
+    "expected_domain": "aviation_marine",
+    "expected_location": "Amritsar",
+    "expected_time_horizon": "current",
+    "language": "en"
+  }
+]

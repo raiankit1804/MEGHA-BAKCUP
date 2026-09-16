@@ -1,0 +1,195 @@
+.splashOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-base);
+  animation: splashFadeIn 0.3s ease-out;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* Ambient Atmospheric Glow Backdrop */
+.glowBackdrop {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(
+    circle at 50% 50%,
+    color-mix(in srgb, var(--accent-primary) 18%, transparent) 0%,
+    color-mix(in srgb, var(--accent-secondary) 12%, transparent) 40%,
+    transparent 75%
+  );
+  filter: blur(60px);
+  pointer-events: none;
+  animation: pulseAura 3s infinite alternate ease-in-out;
+}
+
+/* Unboxed Centered Brand Container (NO CARD) */
+.brandContainer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  z-index: 10;
+  animation: brandReveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Logo Image with gentle floating micro-animation */
+.logoWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+  filter: drop-shadow(0 8px 24px var(--accent-glow));
+}
+
+.logoImage {
+  max-width: 420px;
+  width: 85vw;
+  height: auto;
+  object-fit: contain;
+  animation: floatSubtle 3s ease-in-out infinite alternate;
+}
+
+/* Tagline / Subtitle */
+.subtitle {
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  letter-spacing: 0.05em;
+  margin-top: 0.25rem;
+  animation: fadeIn 0.8s ease forwards;
+}
+
+/* Minimalist Shimmer Loading Line */
+.progressBarContainer {
+  width: 240px;
+  height: 3px;
+  background: color-mix(in srgb, var(--accent-primary) 15%, var(--border-subtle));
+  border-radius: 999px;
+  margin-top: 1.75rem;
+  overflow: hidden;
+  position: relative;
+}
+
+.progressBarFill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #ab005b 0%, #fa9c00 50%, #ab005b 100%);
+  border-radius: 999px;
+  animation: progressFill 1.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Domain Switch Minimalist Badge (No Card) */
+.switchContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  z-index: 10;
+  animation: brandReveal 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.switchIcon {
+  font-size: 3.2rem;
+  line-height: 1;
+  filter: drop-shadow(0 4px 16px var(--accent-glow));
+  animation: bounceSubtle 1s ease infinite alternate;
+}
+
+.switchPre {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-primary);
+}
+
+.switchTitle {
+  font-family: var(--font-headline);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-headline);
+  margin: 0;
+}
+
+.switchDesc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  max-width: 320px;
+  margin: 0;
+}
+
+/* Animations */
+@keyframes splashFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes brandReveal {
+  0% {
+    opacity: 0;
+    transform: scale(0.92) translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes floatSubtle {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes bounceSubtle {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.08);
+  }
+}
+
+@keyframes pulseAura {
+  0% {
+    transform: translate(-50%, -50%) scale(0.95);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 1;
+  }
+}
+
+@keyframes progressFill {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
